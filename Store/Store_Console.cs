@@ -32,7 +32,7 @@ public class Store_Console : MonoBehaviour
         Input_key();
     }
 
-    #region Â»Ã³ÃÂ¡ Â¿Ã€Ã‡Ã‚, Â´ÃÂ±Ã¢
+    #region »óÁ¡ ¿ÀÇÂ, ´İ±â
     public void Input_key()
     {
         if (Input.GetKeyDown(KeyCode.F)) {
@@ -80,7 +80,7 @@ public class Store_Console : MonoBehaviour
     }
     #endregion
 
-    #region Â¿ÃÃ‚ÃŠ Ã„Â«Ã…Ã—Â°Ã­Â¸Â®
+    #region ¿ŞÂÊ Ä«Å×°í¸®
     public void Click_Face()
     {
         FacePanel.SetActive(true);
@@ -109,7 +109,7 @@ public class Store_Console : MonoBehaviour
     }
     #endregion
 
-    #region Â»Ã³Â´Ãœ Ã„Â«Ã…Ã—Â°Ã­Â¸Â®
+    #region »ó´Ü Ä«Å×°í¸®
     public void Input_Value(string name)
     {
         sm.input_value = name;

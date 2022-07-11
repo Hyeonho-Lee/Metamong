@@ -12,7 +12,7 @@ public class Chatacter_Editor : Editor
 
         Customize_Character cc = (Customize_Character)target;
 
-        if (GUILayout.Button("Â¸Ã°ÂµÃ¢ ÂºÃ’Â·Â¯Â¿Ã€Â±Ã¢"))
+        if (GUILayout.Button("¸ðµâ ºÒ·¯¿À±â"))
         {
             cc.Check_Module();
         }

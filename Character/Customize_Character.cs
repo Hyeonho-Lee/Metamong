@@ -3,48 +3,49 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class Character
 {
-    public int eyebrow; //Â´Â«Â½Ã§
-    public int eye; //Â´Â«
-    public int beard; //Â¼Ã¶Â¿Â°
-    public int mouth; //Ã€Ã”
-    public int hair; // Â¸Ã“Â¸Â®Ã„Â«Â¶Ã´
-    public int head; //Ã„Ãš Â¸Ã°Â¾Ã§
+    public int eyebrow; //´«½ç
+    public int eye; //´«
+    public int beard; //¼ö¿°
+    public int mouth; //ÀÔ
+    public int hair; // ¸Ó¸®Ä«¶ô
+    public int head; //ÄÚ ¸ğ¾ç
 
-    public int top; //Â»Ã³Ã€Ã‡
-    public int pants; //Ã‡ÃÃ€Ã‡
-    public int shoes; //Â½Ã…Â¹ÃŸ
-    public int gloves; //Â¼Ã•
+    public int top; //»óÀÇ
+    public int pants; //ÇÏÀÇ
+    public int shoes; //½Å¹ß
+    public int gloves; //¼Õ
 
-    public int accessory01; //Â¾Ã³Â±Â¼ Â¾Ã‡Â¼Â¼Â¼Â­Â¸Â®
-    public int accessory02; //Â¸Ã±Â¿Â¡ Â°Ã…Â´Ã‚Â°Ã…
-    public int helmet; //Â¸Ã°Ã€Ãš
-    public int weapon; // Â¹Â«Â±Ã¢
+    public int accessory01; //¾ó±¼ ¾Ç¼¼¼­¸®
+    public int accessory02; //¸ñ¿¡ °Å´Â°Å
+    public int helmet; //¸ğÀÚ
+    public int weapon; //¹«±â
 
-} //Ã„Â³Â¸Â¯Ã…Ã Â±Â¸Â¼ÂºÂ¿Ã¤Â¼Ã’
+} //Ä³¸¯ÅÍ ±¸¼º¿ä¼Ò
 
 [System.Serializable]
 public class Character_Moudle
 {
-    public List<GameObject> eyebrow; // Â´Â«Â½Ã§
-    public List<GameObject> eye; // Â´Â«
-    public List<GameObject> beard; // Â¼Ã¶Â¿Â°
-    public List<GameObject> mouth; // Ã€Ã”
-    public List<GameObject> hair; // Â¸Ã“Â¸Â®Ã„Â«Â¶Ã´
-    public List<GameObject> head; //Ã„Ãš Â¸Ã°Â¾Ã§
+    public List<GameObject> eyebrow; // ´«½ç
+    public List<GameObject> eye; // ´«
+    public List<GameObject> beard; // ¼ö¿°
+    public List<GameObject> mouth; // ÀÔ
+    public List<GameObject> hair; // ¸Ó¸®Ä«¶ô
+    public List<GameObject> head; //ÄÚ ¸ğ¾ç
 
-    public List<GameObject> top; // Â»Ã³Ã€Ã‡
-    public List<GameObject> pants; // Ã‡ÃÃ€Ã‡
-    public List<GameObject> shoes; // Â½Ã…Â¹ÃŸ
-    public List<GameObject> gloves; //Â¼Ã•
+    public List<GameObject> top; // »óÀÇ
+    public List<GameObject> pants; // ÇÏÀÇ
+    public List<GameObject> shoes; // ½Å¹ß
+    public List<GameObject> gloves; //¼Õ
 
     public List<GameObject> accessory01; // 
     public List<GameObject> accessory02; // 
-    public List<GameObject> helmet; //Â¸Ã°Ã€Ãš
-    public List<GameObject> weapon; // Â¹Â«Â±Ã¢
+    public List<GameObject> helmet; //¸ğÀÚ
+    public List<GameObject> weapon; // ¹«±â
 
     public void Reset_Input()
     {
@@ -65,29 +66,36 @@ public class Character_Moudle
         helmet = new List<GameObject>();
         weapon = new List<GameObject>();
     }
-} //Â¾Ã†Ã€ÃŒÃ…Ã› Â¸Â®Â½ÂºÃ†Â®Â·Ã Â°Ã¼Â¸Â®
+} //¾ÆÀÌÅÛ ¸®½ºÆ®·Î °ü¸®
 
 public class Customize_Character : MonoBehaviour
 {
-    public Character character = new Character(); //Ã„Â³Â¸Â¯Ã…Ã Â°Â³ÃƒÂ¼ Â»Ã½Â¼Âº
-    public Character_Moudle character_moudle = new Character_Moudle(); //Â¾Ã†Ã€ÃŒÃ…Ã› Â°Â³ÃƒÂ¼ Â»Ã½Â¼Âº
+    public Character character = new Character(); //Ä³¸¯ÅÍ °³Ã¼ »ı¼º
+    public Character_Moudle character_moudle = new Character_Moudle(); //¾ÆÀÌÅÛ °³Ã¼ »ı¼º
 
-    void Start()
+    private Auth_Controller ac;
+
+    private void Start()
     {
+        if (GameObject.Find("Title_Console")) {
+            ac = GameObject.Find("Title_Console").GetComponent<Auth_Controller>();
+        } else {
+            print("¿ÀÇÁ¶óÀÎ ÀÔ´Ï´Ù.");
+        }
         Check_Module();
     }
 
     public void Check_Module()
     {
         string[] value = new string[]
-        { "Eyebrow_Part", "Eye_Part", "Beard_Part", "Mouth_Part", "Hair_Part", "Head_Part", //Â¾Ã³Â±Â¼
-            "Top_Part", "Pants_Part", "Shoes_Part", "Gloves_Part", //Â¸Ã¶
-            "Accessory01_Part", "Accessory02_Part", "Helmet_Part", "Weapon_Part" //Â¾Ã‡Â¼Â¼Â¼Â­Â¸Â®
+        { "Eyebrow_Part", "Eye_Part", "Beard_Part", "Mouth_Part", "Hair_Part", "Head_Part", //¾ó±¼
+            "Top_Part", "Pants_Part", "Shoes_Part", "Gloves_Part", //¸ö
+            "Accessory01_Part", "Accessory02_Part", "Helmet_Part", "Weapon_Part" //¾Ç¼¼¼­¸®
         };
 
         for (int i = 0; i < value.Length; i++)
         {
-            Transform location = GameObject.Find(value[i].ToString()).transform; // ÂºÃÂ¸Ã°ÃÃ¶ÃÂ¤
+            Transform location = GameObject.Find(value[i].ToString()).transform; // ºÎ¸ğÁöÁ¤
 
             switch (value[i].ToString())
             {

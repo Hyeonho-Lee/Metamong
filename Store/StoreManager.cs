@@ -13,58 +13,70 @@ public class StoreManager : MonoBehaviour
     public GameObject item_button;
 
     private Customize_Character cc;
+    private Customize_StoreBnt cs;
+
+    private Auth_Controller ac;
 
     private void Awake()
     {
         cc = GameObject.Find("Character").GetComponent<Customize_Character>();
+        cs = GetComponent<Customize_StoreBnt>();
+
+        if (GameObject.Find("Title_Console")) {
+            ac = GameObject.Find("Title_Console").GetComponent<Auth_Controller>();
+            ac.Get_Character_DB();
+            ac.Get_Character_Button();
+        } else {
+            print("¿ÀÇÁ¶óÀÎ ÀÔ´Ï´Ù.");
+        }
     }
 
 
-    #region Â¹Ã¶Ã†Â° Â»Ã½Â¼Âº
+    #region ¹öÆ° »ı¼º
     public void Create_Bnt()
     {
         if (input_value != null) {
             switch (input_value) {
-                case "Â´Â«Â½Ã§":
+                case "´«½ç":
                     Create_Button(cc.character_moudle.eyebrow.Count);
                     break;
-                case "Â´Â«":
+                case "´«":
                     Create_Button(cc.character_moudle.eye.Count);
                     break;
-                case "Â¼Ã¶Â¿Â°":
+                case "¼ö¿°":
                     Create_Button(cc.character_moudle.beard.Count);
                     break;
-                case "Ã€Ã”":
+                case "ÀÔ":
                     Create_Button(cc.character_moudle.mouth.Count);
                     break;
-                case "Â¸Ã“Â¸Â®Ã„Â«Â¶Ã´":
+                case "¸Ó¸®Ä«¶ô":
                     Create_Button(cc.character_moudle.hair.Count);
                     break;
-                case "Â¸Ã“Â¸Â®":
+                case "¸Ó¸®":
                     Create_Button(cc.character_moudle.head.Count);
                     break;
-                case "Â»Ã³Ã€Ã‡":
+                case "»óÀÇ":
                     Create_Button(cc.character_moudle.top.Count);
                     break;
-                case "Ã‡ÃÃ€Ã‡":
+                case "ÇÏÀÇ":
                     Create_Button(cc.character_moudle.pants.Count);
                     break;
-                case "Â½Ã…Â¹ÃŸ":
+                case "½Å¹ß":
                     Create_Button(cc.character_moudle.shoes.Count);
                     break;
-                case "Â¼Ã•":
+                case "¼Õ":
                     Create_Button(cc.character_moudle.gloves.Count);
                     break;
-                case "Ã€Ã¥Â½Ã„1":
+                case "Àå½Ä1":
                     Create_Button(cc.character_moudle.accessory01.Count);
                     break;
-                case "Ã€Ã¥Â½Ã„2":
+                case "Àå½Ä2":
                     Create_Button(cc.character_moudle.accessory02.Count);
                     break;
-                case "Â¸Ã°Ã€Ãš":
+                case "¸ğÀÚ":
                     Create_Button(cc.character_moudle.helmet.Count);
                     break;
-                case "Â¹Â«Â±Ã¢":
+                case "¹«±â":
                     Create_Button(cc.character_moudle.weapon.Count);
                     break;
             }
@@ -81,6 +93,85 @@ public class StoreManager : MonoBehaviour
             Bntt.transform.SetParent(Parents);
             Bntt.transform.localScale = new Vector3(1, 1, 1);
             Bntt.GetComponent<Button>().onClick.AddListener(() => Change_Module());
+
+            GameObject item_name = Bntt.transform.Find("ItemName").gameObject;
+            Text bntt_name = item_name.GetComponent<Text>();
+
+            GameObject item_price = Bntt.transform.Find("Price").gameObject;
+            Text bntt_price = item_price.GetComponent<Text>();
+
+            GameObject bntImage = Bntt.transform.Find("ItemImage").gameObject;
+            Image bnttImage = bntImage.GetComponent<Image>();
+
+            if (input_value != null) {
+                switch (input_value) {
+                    case "´«½ç":
+                        bnttImage.sprite = cs.item_moudle.Item_eyebrow[i];
+                        bntt_name.text = ac.cc_db.eyebrow[i].name_kr;
+                        bntt_price.text = ac.cc_db.eyebrow[i].price.ToString() + " G";
+                        break;
+                    case "´«":
+                        bnttImage.sprite = cs.item_moudle.Item_eye[i];
+                        bntt_name.text = ac.cc_db.eye[i].name_kr;
+                        bntt_price.text = ac.cc_db.eye[i].price.ToString() + " G";
+                        break;
+                    case "¼ö¿°":
+                        bnttImage.sprite = cs.item_moudle.Item_beard[i];
+                        bntt_name.text = ac.cc_db.beard[i].name_kr;
+                        bntt_price.text = ac.cc_db.beard[i].price.ToString() + " G";
+                        break;
+                    case "ÀÔ":
+                        bnttImage.sprite = cs.item_moudle.Item_mouth[i];
+                        bntt_name.text = ac.cc_db.mouth[i].name_kr;
+                        bntt_price.text = ac.cc_db.mouth[i].price.ToString() + " G";
+                        break;
+                    case "¸Ó¸®Ä«¶ô":
+                        bnttImage.sprite = cs.item_moudle.Item_hair[i];
+                        bntt_name.text = ac.cc_db.hair[i].name_kr;
+                        bntt_price.text = ac.cc_db.hair[i].price.ToString() + " G";
+                        break;
+                    case "¸Ó¸®":
+                        bnttImage.sprite = cs.item_moudle.Item_head[i];
+                        bntt_name.text = ac.cc_db.head[i].name_kr;
+                        bntt_price.text = ac.cc_db.head[i].price.ToString() + " G";
+                        break;
+                    case "»óÀÇ":
+                        bnttImage.sprite = cs.item_moudle.Item_top[i];
+                        bntt_name.text = ac.cc_db.top[i].name_kr;
+                        bntt_price.text = ac.cc_db.top[i].price.ToString() + " G";
+                        break;
+                    case "ÇÏÀÇ":
+                        bnttImage.sprite = cs.item_moudle.Item_pants[i];
+                        bntt_name.text = ac.cc_db.pants[i].name_kr;
+                        bntt_price.text = ac.cc_db.pants[i].price.ToString() + " G";
+                        break;
+                    case "½Å¹ß":
+                        bnttImage.sprite = cs.item_moudle.Item_shoes[i];
+                        bntt_name.text = ac.cc_db.shoes[i].name_kr;
+                        bntt_price.text = ac.cc_db.shoes[i].price.ToString() + " G";
+                        break;
+                    case "¼Õ":
+                        bnttImage.sprite = cs.item_moudle.Item_gloves[i];
+                        bntt_name.text = ac.cc_db.gloves[i].name_kr;
+                        bntt_price.text = ac.cc_db.gloves[i].price.ToString() + " G";
+                        break;
+                    case "Àå½Ä1":
+                        bnttImage.sprite = cs.item_moudle.Item_accessory01[i];
+                        bntt_name.text = ac.cc_db.accessory01[i].name_kr;
+                        bntt_price.text = ac.cc_db.accessory01[i].price.ToString() + " G";
+                        break;
+                    case "Àå½Ä2":
+                        bnttImage.sprite = cs.item_moudle.Item_accessory02[i];
+                        bntt_name.text = ac.cc_db.accessory02[i].name_kr;
+                        bntt_price.text = ac.cc_db.accessory02[i].price.ToString() + " G";
+                        break;
+                    case "¸ğÀÚ":
+                        bnttImage.sprite = cs.item_moudle.Item_helmet[i];
+                        bntt_name.text = ac.cc_db.helmet[i].name_kr;
+                        bntt_price.text = ac.cc_db.helmet[i].price.ToString() + " G";
+                        break;
+                }
+            }
         }
     }
 
@@ -134,7 +225,7 @@ public class StoreManager : MonoBehaviour
 
     #endregion
 
-    #region Â¸Ã°ÂµÃ¢ Â¹Ã™Â²Ã™Â±Ã¢
+    #region ¸ğµâ ¹Ù²Ù±â
     public void Change_Module()
     {
         Transform Eyebrow_Part = GameObject.Find("Eyebrow_Part").transform;
@@ -158,98 +249,111 @@ public class StoreManager : MonoBehaviour
         {
             switch (input_value)
             {
-                case "Â´Â«Â½Ã§":
+                case "´«½ç":
                     if (Eyebrow_Part.childCount != 0)
                     {
                         cc.character.eyebrow = int.Parse(index_string);
+                        ac.cc_user.eyebrow = cc.character.eyebrow;
                         cc.Change_Character("Eyebrow_Part", "eyebrow");
                     }
                     break;
-                case "Â´Â«":
+                case "´«":
                     if (Eye_Part.childCount != 0)
                     {
                         cc.character.eye = int.Parse(index_string);
+                        ac.cc_user.eye = cc.character.eye;
                         cc.Change_Character("Eye_Part", "eye");
                     }
                     break;
-                case "Â¼Ã¶Â¿Â°":
+                case "¼ö¿°":
                     if (Beard_Part.childCount != 0)
                     {
                         cc.character.beard = int.Parse(index_string);
+                        ac.cc_user.beard = cc.character.beard;
                         cc.Change_Character("Beard_Part", "beard");
                     }
                     break;
-                case "Ã€Ã”":
+                case "ÀÔ":
                     if (Mouth_Part.childCount != 0)
                     {
                         cc.character.mouth = int.Parse(index_string);
+                        ac.cc_user.mouth = cc.character.mouth;
                         cc.Change_Character("Mouth_Part", "mouth");
                     }
                     break;
-                case "Â¸Ã“Â¸Â®Ã„Â«Â¶Ã´":
+                case "¸Ó¸®Ä«¶ô":
                     if (Hair_Part.childCount != 0)
                     {
                         cc.character.hair = int.Parse(index_string);
+                        ac.cc_user.hair = cc.character.hair;
                         cc.Change_Character("Hair_Part", "hair");
                     }
                     break;
-                case "Â¸Ã“Â¸Â®":
+                case "¸Ó¸®":
                     if (Head_Part.childCount != 0)
                     {
                         cc.character.head = int.Parse(index_string);
+                        ac.cc_user.head = cc.character.head;
                         cc.Change_Character("Head_Part", "head");
                     }
                     break;
-                case "Â»Ã³Ã€Ã‡":
+                case "»óÀÇ":
                     if (Top_Part.childCount != 0)
                     {
                         cc.character.top = int.Parse(index_string);
+                        ac.cc_user.top = cc.character.top;
                         cc.Change_Character("Top_Part", "top");
                     }
                     break;
-                case "Ã‡ÃÃ€Ã‡":
+                case "ÇÏÀÇ":
                     if (Pants_Part.childCount != 0)
                     {
                         cc.character.pants = int.Parse(index_string);
+                        ac.cc_user.pants = cc.character.pants;
                         cc.Change_Character("Pants_Part", "pants");
                     }
                     break;
-                case "Â½Ã…Â¹ÃŸ":
+                case "½Å¹ß":
                     if (Shoes_Part.childCount != 0)
                     {
                         cc.character.shoes = int.Parse(index_string);
+                        ac.cc_user.shoes = cc.character.shoes;
                         cc.Change_Character("Shoes_Part", "shoes");
                     }
                     break;
-                case "Â¼Ã•":
+                case "¼Õ":
                     if (Gloves_Part.childCount != 0)
                     {
                         cc.character.gloves = int.Parse(index_string);
+                        ac.cc_user.gloves = cc.character.gloves;
                         cc.Change_Character("Gloves_Part", "gloves");
                     }
                     break;
-                case "Ã€Ã¥Â½Ã„1":
+                case "Àå½Ä1":
                     if (Accessory01_Part.childCount != 0)
                     {
                         cc.character.accessory01 = int.Parse(index_string);
+                        ac.cc_user.accessory01 = cc.character.accessory01;
                         cc.Change_Character("Accessory01_Part", "accessory01");
                     }
                     break;
-                case "Ã€Ã¥Â½Ã„2":
+                case "Àå½Ä2":
                     if (Accessory02_Part.childCount != 0)
                     {
                         cc.character.accessory02 = int.Parse(index_string);
+                        ac.cc_user.accessory02 = cc.character.accessory02;
                         cc.Change_Character("Accessory02_Part", "accessory02");
                     }
                     break;
-                case "Â¸Ã°Ã€Ãš":
+                case "¸ğÀÚ":
                     if (Helmet_Part.childCount != 0)
                     {
                         cc.character.helmet = int.Parse(index_string);
+                        ac.cc_user.helmet = cc.character.helmet;
                         cc.Change_Character("Helmet_Part", "helmet");
                     }
                     break;
-                case "Â¹Â«Â±Ã¢":
+                case "¹«±â":
                     if (Weapon_Part.childCount != 0)
                     {
                         cc.character.weapon = int.Parse(index_string);

@@ -6,15 +6,9 @@ using Proyecto26;
 using System;
 using FullSerializer;
 using UnityEngine.Serialization;
-using UnityEngine.SceneManagement;
 
 public class Auth_Controller : MonoBehaviour
-{
-    public static string username_value;
-    public static string email_value;
-    public static string password_value;
-    public static string uid_value;
-
+{ 
     public static fsSerializer serializer = new fsSerializer();
 
     private string database_url = "https://metamong-16b1b-default-rtdb.firebaseio.com";
@@ -22,73 +16,59 @@ public class Auth_Controller : MonoBehaviour
     private string signin_url = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=";
     private string auth_key = "AIzaSyD5rNq2oe20orEMCNwO06qePZn2BNYTyw8";
 
+    [Header("User Info")]
     public string userName;
     public string idToken;
     public string localId;
+    public string error_code;
 
-    private GameObject console;
-
-    private Text uid_text;
-    private InputField username_text;
-    private InputField email_text;
-    private InputField password_text;
-
-    User user = new User();
+    [Header("Data Info")]
+    public User user = new User();
     public CC_User cc_user = new CC_User();
     public CC_DB cc_db = new CC_DB();
 
-    private void Start()
-    {
-        console = GameObject.Find("Title_Console").gameObject;
-        uid_text = GameObject.Find("Uid_Text").GetComponent<Text>();
-        username_text = GameObject.Find("Username_Field").GetComponent<InputField>();
-        email_text = GameObject.Find("Email_Field").GetComponent<InputField>();
-        password_text = GameObject.Find("Password_Field").GetComponent<InputField>();
-    }
+    #region È¸¿ø°¡ÀÔ
 
-    #region ÃˆÂ¸Â¿Ã¸Â°Â¡Ã€Ã”
-    public void SignUp_Button()
-    {
-        userName = "";
-        idToken = "";
-        localId = "";
-
-        SignUp_User(username_text.text, email_text.text, password_text.text);
-    }
-
-    private void SignUp_User(string username, string email, string password)
+    public void SignUp_User(string username, string email, string password, bool is_user, bool is_counselor)
     {
         string userData = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
         RestClient.Post<SignResponse>(signup_url + auth_key, userData).Then(
             response =>
             {
+                userName = username;
                 idToken = response.idToken;
                 localId = response.localId;
-                username_value = username;
-                email_value = email;
-                password_value = password;
-                uid_value = response.localId;
-                Debug.Log("ÃˆÂ¸Â¿Ã¸Â°Â¡Ã€Ã” Â¼ÂºÂ°Ã¸");
+
+                user.username = username;
+                user.email = email;
+                user.password = password;
+                user.uid = response.localId;
+                user.is_user = is_user;
+                user.is_counselor = is_counselor;
+                user.is_counselor_check = false;
+                user.money = 100;
+
+                //Debug.Log("È¸¿ø°¡ÀÔ ¼º°ø");
                 PostToDatabase("user");
+
+                error_code = "";
             }).Catch(error =>
             {
-                Debug.Log(error);
+                error_code = error.Message;
+                switch (error_code) {
+                    case "HTTP/1.1 400 Bad Request":
+                        error_code = "400";
+                        break;
+                }
+                //Debug.Log(error);
             });
     }
 
     #endregion
 
-    #region Â·ÃÂ±Ã—Ã€Ã
-    public void SignIn_Button()
-    {
-        userName = "";
-        idToken = "";
-        localId = "";
+    #region ·Î±×ÀÎ
 
-        SignIn_User(email_text.text, password_text.text);
-    }
-
-    private void SignIn_User(string email, string password)
+    public void SignIn_User(string email, string password)
     {
         string userData = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
         RestClient.Post<SignResponse>(signin_url + auth_key, userData).Then(
@@ -96,22 +76,31 @@ public class Auth_Controller : MonoBehaviour
             {
                 idToken = response.idToken;
                 localId = response.localId;
-                Debug.Log("Â·ÃÂ±Ã—Ã€Ã Â¼ÂºÂ°Ã¸");
+
+                //Debug.Log("·Î±×ÀÎ ¼º°ø");
                 GetToDatabase("user");
+
+                error_code = "";
             }).Catch(error =>
             {
-                Debug.Log(error);
+                error_code = error.Message;
+                switch (error_code) {
+                    case "HTTP/1.1 400 Bad Request":
+                        error_code = "400";
+                        break;
+                }
+                //Debug.Log(error);
             });
     }
 
     #endregion
 
-    #region Uid Â°Â¡ÃÂ®Â¿Ã€Â±Ã¢
+    #region Uid °¡Á®¿À±â
 
-    // Â·ÃÂ±Ã—Ã€ÃÃ€ÃŒ Â¿ÃÂ·Ã¡ÃˆÃ„ Â¹ÃŸÂ±ÃÂµÃˆ TokenÃ€Â» Ã…Ã«Ã‡Ã˜ uid Â¶Ã‡Â´Ã‚ Â´Ã™Â¸Â¥ ÂµÂ¥Ã€ÃŒÃ…Ã ÃÂ¢Â±Ã™Ã€ÃŒ Â°Â¡Â´Ã‰Ã‡ÃÂ´Ã™.
+    // ·Î±×ÀÎÀÌ ¿Ï·áÈÄ ¹ß±ŞµÈ TokenÀ» ÅëÇØ uid ¶Ç´Â ´Ù¸¥ µ¥ÀÌÅÍ Á¢±ÙÀÌ °¡´ÉÇÏ´Ù.
     private void GetLocalId()
     {
-        RestClient.Get(database_url + "/user/" + ".json?auth=" + idToken).Then(response =>
+        /*RestClient.Get(database_url + "/user/" + ".json?auth=" + idToken).Then(response =>
         {
             string username = uid_text.text;
 
@@ -131,7 +120,7 @@ public class Auth_Controller : MonoBehaviour
         }).Catch(error =>
         {
             Debug.Log(error);
-        });
+        });*/
     }
 
     private void RetrieveFromDatabase()
@@ -145,26 +134,25 @@ public class Auth_Controller : MonoBehaviour
 
     #endregion
 
-    #region Ã†Ã„Ã€ÃŒÂ¾Ã®ÂºÂ£Ã€ÃŒÂ½Âº ÃÂ¢Â±Ã™
-    // ÂµÂ¥Ã€ÃŒÃ…Ã Â¾Ã·Â·ÃÂµÃ¥
+    #region ÆÄÀÌ¾îº£ÀÌ½º Á¢±Ù
+    // µ¥ÀÌÅÍ ¾÷·Îµå
     private void PostToDatabase(string value)
     {
         switch (value)
         {
             case "user":
-                User user = new User();
                 RestClient.Put(database_url + "/user/" + localId + ".json?auth=" + idToken, user);
                 break;
             case "character_custom":
                 cc_user.username = userName;
                 cc_user.uid = localId;
                 RestClient.Put(database_url + "/character/" + localId + ".json?auth=" + idToken, cc_user);
-                Debug.Log("Â¾Ã†Â¹Ã™Ã…Â¸ Â¾Ã·Â·ÃÂµÃ¥ Â¿ÃÂ·Ã¡");
+                Debug.Log("¾Æ¹ÙÅ¸ ¾÷·Îµå ¿Ï·á");
                 break;
         }
     }
 
-    // ÂµÂ¥Ã€ÃŒÃ…Ã Â°Â¡ÃÂ®Â¿Ã€Â±Ã¢
+    // µ¥ÀÌÅÍ °¡Á®¿À±â
     private void GetToDatabase(string value)
     {
         switch (value)
@@ -172,7 +160,6 @@ public class Auth_Controller : MonoBehaviour
             case "user":
                 RestClient.Get<User>(database_url + "/user/" + localId + ".json?auth=" + idToken).Then(response =>
                 {
-                    uid_text.text = response.username;
                     userName = response.username;
                 });
                 break;
@@ -193,7 +180,7 @@ public class Auth_Controller : MonoBehaviour
                     cc_user.top = response.top;
                     cc_user.username = response.username;
                     cc_user.uid = response.uid;
-                    Debug.Log("Â¾Ã†Â¹Ã™Ã…Â¸ Â°Â¡ÃÂ®Â¿Ã€Â±Ã¢ Â¿ÃÂ·Ã¡");
+                    Debug.Log("¾Æ¹ÙÅ¸ °¡Á®¿À±â ¿Ï·á");
                 });
                 break;
             case "character_db":
@@ -251,21 +238,12 @@ public class Auth_Controller : MonoBehaviour
                         cc_db.top.Add(response.top[i]);
                     }
 
-                    Debug.Log("Ã„Â³Â¸Â¯Ã…Ã ÂµÂ¥Ã€ÃŒÃ…Ã ÂºÃ’Â·Â¯Â¿Ã€Â±Ã¢ Â¿ÃÂ·Ã¡");
+                    Debug.Log("Ä³¸¯ÅÍ µ¥ÀÌÅÍ ºÒ·¯¿À±â ¿Ï·á");
                 });
                 break;
         }
     }
 
-    #endregion
-
-    #region Scene Ã€Ã¼ÃˆÂ¯
-    public void Change_Scene(string name)
-    {
-        DontDestroyOnLoad(console);
-        //SceneManager.LoadScene("Character_Custom");
-        SceneManager.LoadScene(name);
-    }
     #endregion
 
     public void Update_Character_Button()
