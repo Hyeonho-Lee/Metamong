@@ -6,7 +6,7 @@ public class Character_Rotate : MonoBehaviour
 {
     public GameObject Character;
 
-    float y; //Character Rotate y
+    float y; //Character Rotate ys
 
     public bool m_IsButtonDowning;
 
@@ -33,7 +33,7 @@ public class Character_Rotate : MonoBehaviour
                     }
                     break;
 
-                case "¿À¸¥ÂÊ":
+                case "¿?¸¥ÂÊ":
                     if (y == -360)
                     {
                         y = 0;
