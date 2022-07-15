@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 [System.Serializable]
 public class Item_Moudle
@@ -69,32 +70,18 @@ public class Customize_StoreBnt : MonoBehaviour
         Sprite[] Shoessprites = Resources.LoadAll<Sprite>("item_sprite/Shoes");
         Sprite[] Topsprites = Resources.LoadAll<Sprite>("item_sprite/Top");
 
-
-        for (int i = 0; i < Accessory01sprites.Length; i++) item_moudle.Item_accessory01.Add(Accessory01sprites[i]);
-
-        for (int i = 0; i < Accessory02sprites.Length; i++) item_moudle.Item_accessory02.Add(Accessory02sprites[i]);
-
-        for (int i = 0; i < Beardsprites.Length; i++) item_moudle.Item_beard.Add(Beardsprites[i]);
-
-        for (int i = 0; i < Eyesprites.Length; i++) item_moudle.Item_eye.Add(Eyesprites[i]);
-
-        for (int i = 0; i < Eyebrowsprites.Length; i++) item_moudle.Item_eyebrow.Add(Eyebrowsprites[i]);
-
-        for (int i = 0; i < Glovessprites.Length; i++) item_moudle.Item_gloves.Add(Glovessprites[i]);
-
-        for (int i = 0; i < Hairsprites.Length; i++) item_moudle.Item_hair.Add(Hairsprites[i]);
-
-        for (int i = 0; i < Headsprites.Length; i++) item_moudle.Item_head.Add(Headsprites[i]);
-
-        for (int i = 0; i < Helmetsprites.Length; i++) item_moudle.Item_helmet.Add(Helmetsprites[i]);
-
-        for (int i = 0; i < Mouthsprites.Length; i++) item_moudle.Item_mouth.Add(Mouthsprites[i]);
-
-        for (int i = 0; i < Pantssprites.Length; i++) item_moudle.Item_pants.Add(Pantssprites[i]);
-
-        for (int i = 0; i < Shoessprites.Length; i++) item_moudle.Item_shoes.Add(Shoessprites[i]);
-
-        for (int i = 0; i < Topsprites.Length; i++) item_moudle.Item_top.Add(Topsprites[i]);
-
+        item_moudle.Item_accessory01 = Accessory01sprites.OfType<Sprite>().ToList();
+        item_moudle.Item_accessory02 = Accessory02sprites.OfType<Sprite>().ToList();
+        item_moudle.Item_beard = Beardsprites.OfType<Sprite>().ToList();
+        item_moudle.Item_eye = Eyesprites.OfType<Sprite>().ToList();
+        item_moudle.Item_eyebrow = Eyebrowsprites.OfType<Sprite>().ToList();
+        item_moudle.Item_gloves = Glovessprites.OfType<Sprite>().ToList();
+        item_moudle.Item_hair = Hairsprites.OfType<Sprite>().ToList();
+        item_moudle.Item_head = Headsprites.OfType<Sprite>().ToList();
+        item_moudle.Item_helmet = Helmetsprites.OfType<Sprite>().ToList();
+        item_moudle.Item_mouth = Mouthsprites.OfType<Sprite>().ToList();
+        item_moudle.Item_pants = Pantssprites.OfType<Sprite>().ToList();
+        item_moudle.Item_shoes = Shoessprites.OfType<Sprite>().ToList();
+        item_moudle.Item_top = Topsprites.OfType<Sprite>().ToList();
     }
 }

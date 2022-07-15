@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player_Movement : MonoBehaviour
 {
@@ -8,10 +9,11 @@ public class Player_Movement : MonoBehaviour
     public float vertical;
 
     public bool is_move;
+    public bool is_room;
 
     private float t;
     private float timeStart;
-    private float timeDuration = 2.0f;
+    private float timeDuration;
 
     public float move_speed;
     private float first_speed;
@@ -37,11 +39,12 @@ public class Player_Movement : MonoBehaviour
 
     void Start()
     {
-        first_speed = 4.0f;
-        end_speed = 7.0f;
-
         is_move = false;
-        player_dir = Vector3.forward;
+
+        Scene scene = SceneManager.GetActiveScene();
+
+        if (scene.name == "Main_World") is_room = false;
+        if (scene.name == "Room_Custom") is_room = true;
     }
 
     void Update()
@@ -63,6 +66,18 @@ public class Player_Movement : MonoBehaviour
             is_move = true;
         }else {
             is_move = false;
+        }
+
+        if (is_room) {
+            player_dir = new Vector3(1, 0, 1);
+            timeDuration = 1.0f;
+            first_speed = 0.5f;
+            end_speed = 1.5f;
+        }else {
+            player_dir = new Vector3(0, 0, 1);
+            timeDuration = 2.0f;
+            first_speed = 4.0f;
+            end_speed = 7.0f;
         }
 
         if (!is_move) {

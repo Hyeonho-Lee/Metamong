@@ -26,6 +26,7 @@ public class Auth_Controller : MonoBehaviour
     public User user = new User();
     public CC_User cc_user = new CC_User();
     public CC_DB cc_db = new CC_DB();
+    public RC_User rc_user = new RC_User();
 
     #region 회원가입
 
@@ -149,6 +150,11 @@ public class Auth_Controller : MonoBehaviour
                 RestClient.Put(database_url + "/character/" + localId + ".json?auth=" + idToken, cc_user);
                 Debug.Log("아바타 업로드 완료");
                 break;
+            case "room_custom":
+                rc_user.username = userName;
+                rc_user.uid = localId;
+                RestClient.Put(database_url + "/room/" + localId + ".json?auth=" + idToken, rc_user);
+                break;
         }
     }
 
@@ -241,6 +247,24 @@ public class Auth_Controller : MonoBehaviour
                     Debug.Log("캐릭터 데이터 불러오기 완료");
                 });
                 break;
+            case "room_custom":
+                RestClient.Get<RC_User>(database_url + "/room/" + localId + ".json?auth=" + idToken).Then(response => {
+                    rc_user.wall01 = response.wall01;
+                    rc_user.wall_accessory01 = response.wall_accessory01;
+                    rc_user.ground_accessory01 = response.ground_accessory01;
+
+                    rc_user.wall02 = response.wall02;
+                    rc_user.wall_accessory02 = response.wall_accessory02;
+                    rc_user.ground_accessory02 = response.ground_accessory02;
+
+                    rc_user.ground = response.ground;
+                    rc_user.chair01 = response.chair01;
+                    rc_user.chair02 = response.chair02;
+                    rc_user.table = response.table;
+                    rc_user.table_accessory01 = response.table_accessory01;
+                    //Debug.Log("아바타 가져오기 완료");
+                });
+                break;
         }
     }
 
@@ -256,8 +280,22 @@ public class Auth_Controller : MonoBehaviour
         GetToDatabase("character_custom");
     }
 
+    //--------------------------------------------//
+
     public void Get_Character_DB()
     {
         GetToDatabase("character_db");
+    }
+
+    //--------------------------------------------//
+
+    public void Update_Room()
+    {
+        PostToDatabase("room_custom");
+    }
+
+    public void Get_Room()
+    {
+        GetToDatabase("room_custom");
     }
 }

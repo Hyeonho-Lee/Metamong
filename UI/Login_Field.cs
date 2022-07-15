@@ -153,13 +153,7 @@ public class Login_Field : MonoBehaviour
 
     public void Change_Scene(string name)
     {
-        //DontDestroyOnLoad(console);
-        SceneManager.LoadScene(name);
-    }
-
-    public void Change_World ()
-    {
         DontDestroyOnLoad(console);
-        SceneManager.LoadScene("Main_World");
+        SceneManager.LoadScene(name);
     }
 }
