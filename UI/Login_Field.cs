@@ -156,4 +156,10 @@ public class Login_Field : MonoBehaviour
         DontDestroyOnLoad(console);
         SceneManager.LoadScene(name);
     }
+
+    public void admin_access()
+    {
+        email_field.text = "admin1@gmail.com";
+        password_field.text = "12345678";
+    }
 }

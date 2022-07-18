@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class Player_Movement : MonoBehaviour
+public class Player_Movement : MonoBehaviourPunCallbacks, IPunObservable
 {
     public float horizontal;
     public float vertical;
@@ -26,15 +28,20 @@ public class Player_Movement : MonoBehaviour
     public Vector3 impact;
     private Vector3 dir_forward, dir_f_right, dir_right, dir_b_right, dir_back, dir_b_left, dir_left, dir_f_left;
 
+    private Transform Bip001;
+
     CharacterController cc;
     Animator motion;
-    //TPSCamera tpscamera;
+
+    private PhotonView PV;
 
     void Awake()
     {
         cc = GetComponent<CharacterController>();
+        PV = GetComponent<PhotonView>();
         motion = GetComponent<Animator>();
-        //tpscamera = GameObject.Find("TPS_Camera").GetComponent<TPSCamera>();
+
+        Bip001 = this.transform.GetChild(0);
     }
 
     void Start()
@@ -49,12 +56,16 @@ public class Player_Movement : MonoBehaviour
 
     void Update()
     {
-        Check_Input();
+        if (PV.IsMine) {
+            Check_Input();
+        }
     }
 
     void FixedUpdate()
     {
-        Move();
+        if (PV.IsMine) {
+            Move();
+        }
     }
 
     void Check_Input()
@@ -74,7 +85,6 @@ public class Player_Movement : MonoBehaviour
             first_speed = 0.5f;
             end_speed = 1.5f;
         }else {
-            player_dir = new Vector3(0, 0, 1);
             timeDuration = 2.0f;
             first_speed = 4.0f;
             end_speed = 7.0f;
@@ -168,7 +178,14 @@ public class Player_Movement : MonoBehaviour
     void Move_Vector(Vector3 input_vector, Vector3 rotate_vector)
     {
         Quaternion newRotation = Quaternion.LookRotation(rotate_vector);
-        this.transform.rotation = Quaternion.Slerp(this.transform.rotation, newRotation, 6.0f * Time.deltaTime);
+        Bip001.transform.rotation = Quaternion.Slerp(Bip001.transform.rotation, newRotation, 6.0f * Time.deltaTime);
         cc.Move(input_vector * (move_speed * Time.deltaTime));
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting) {
+            stream.SendNext(transform.position);
+        }
     }
 }

@@ -73,15 +73,8 @@ public class Customize_Character : MonoBehaviour
     public Character character = new Character(); //캐릭터 개체 생성
     public Character_Moudle character_moudle = new Character_Moudle(); //아이템 개체 생성
 
-    private Auth_Controller ac;
-
     private void Start()
     {
-        if (GameObject.Find("Title_Console")) {
-            ac = GameObject.Find("Title_Console").GetComponent<Auth_Controller>();
-        } else {
-            print("오프라인 입니다.");
-        }
         Check_Module();
     }
 
