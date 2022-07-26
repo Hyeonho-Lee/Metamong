@@ -65,7 +65,7 @@ public class Login_Field : MonoBehaviour
 
     IEnumerator Delay_Login()
     {
-        float delay = 0.5f;
+        float delay = 0.7f;
 
         GameObject submit = GameObject.Find("Submit").gameObject;
         submit.SetActive(false);

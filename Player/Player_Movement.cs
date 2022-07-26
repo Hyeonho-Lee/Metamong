@@ -28,6 +28,9 @@ public class Player_Movement : MonoBehaviourPunCallbacks, IPunObservable
     public Vector3 impact;
     private Vector3 dir_forward, dir_f_right, dir_right, dir_b_right, dir_back, dir_b_left, dir_left, dir_f_left;
 
+    Vector3 Current_Pos;
+    Quaternion Current_Rot;
+
     private Transform Bip001;
 
     CharacterController cc;
@@ -41,7 +44,8 @@ public class Player_Movement : MonoBehaviourPunCallbacks, IPunObservable
         PV = GetComponent<PhotonView>();
         motion = GetComponent<Animator>();
 
-        Bip001 = this.transform.GetChild(0);
+        //Bip001 = this.transform.GetChild(0);
+        Bip001 = this.transform;
     }
 
     void Start()
@@ -65,6 +69,12 @@ public class Player_Movement : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (PV.IsMine) {
             Move();
+        }else if ((transform.position - Current_Pos).sqrMagnitude >= 100) {
+            this.transform.position = Current_Pos;
+            this.transform.rotation = Current_Rot;
+        }else {
+            this.transform.position = Vector3.Lerp(this.transform.position, Current_Pos, Time.smoothDeltaTime * 10);
+            this.transform.rotation = Quaternion.Lerp(this.transform.rotation, Current_Rot, Time.smoothDeltaTime * 10);
         }
     }
 
@@ -178,14 +188,18 @@ public class Player_Movement : MonoBehaviourPunCallbacks, IPunObservable
     void Move_Vector(Vector3 input_vector, Vector3 rotate_vector)
     {
         Quaternion newRotation = Quaternion.LookRotation(rotate_vector);
-        Bip001.transform.rotation = Quaternion.Slerp(Bip001.transform.rotation, newRotation, 6.0f * Time.deltaTime);
+        this.transform.rotation = Quaternion.Slerp(this.transform.rotation, newRotation, 6.0f * Time.deltaTime);
         cc.Move(input_vector * (move_speed * Time.deltaTime));
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting) {
-            stream.SendNext(transform.position);
+            stream.SendNext(this.transform.position);
+            stream.SendNext(this.transform.rotation);
+        }else {
+            Current_Pos = (Vector3)stream.ReceiveNext();
+            Current_Rot = (Quaternion)stream.ReceiveNext();
         }
     }
 }

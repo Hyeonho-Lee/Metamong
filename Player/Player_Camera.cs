@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class Player_Camera : MonoBehaviour
+public class Player_Camera : MonoBehaviourPunCallbacks, IPunObservable
 {
-    [System.NonSerialized]
+    //[System.NonSerialized]
     public float mouse_horizontal, mouse_vertical, whell_value;
 
     public float camera_distance;
@@ -15,9 +17,10 @@ public class Player_Camera : MonoBehaviour
     public Vector3 dir_nor;
 
     public Transform Reset_Transform;
+    public Transform Player_Transform;
 
-    private Transform Player_Transform;
     private Transform Camera_Arm;
+    public Transform Player_Canvas;
     private GameObject Main_Camera;
 
     private RaycastHit camera_hit;
@@ -25,19 +28,22 @@ public class Player_Camera : MonoBehaviour
 
     private void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
         whell_value = 1f;
         input_y = 3.0f;
 
         Camera_Arm = this.transform.parent;
-        Player_Transform = Camera_Arm.parent;
         Main_Camera = this.gameObject;
 
         PM = Player_Transform.GetComponent<Player_Movement>();
+        Player_Canvas = Player_Transform.GetChild(9).transform;
     }
 
     private void Update()
     {
+        Camera_Arm.position = Player_Transform.transform.position + new Vector3(0f, 6.2f, 0f);
+        Player_Canvas.rotation = Quaternion.LookRotation(dir_nor);
+
         Mouse_Movement();
         Input_whell();
         Raycast_Camera();
@@ -50,7 +56,7 @@ public class Player_Camera : MonoBehaviour
     private void Mouse_Movement()
     {
         mouse_horizontal = Input.GetAxis("Mouse X");
-        mouse_vertical = -Input.GetAxis("Mouse Y");
+        mouse_vertical = Input.GetAxis("Mouse Y");
 
         camera_angle = Camera_Arm.rotation.eulerAngles;
         float x = camera_angle.x - mouse_vertical;
@@ -94,5 +100,9 @@ public class Player_Camera : MonoBehaviour
         }
 
         Debug.DrawRay(Reset_Transform.transform.position, camera_dir, Color.blue);
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
     }
 }
