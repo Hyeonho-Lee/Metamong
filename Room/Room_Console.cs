@@ -159,9 +159,4 @@ public class Room_Console : MonoBehaviour
             btn.GetComponent<Button>().onClick.AddListener(() => Test());
         }
     }*/
-
-    public void Test()
-    {
-        Debug.Log("Click test");
-    }
 }

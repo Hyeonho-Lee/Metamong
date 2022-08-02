@@ -16,5 +16,9 @@ public class Chatacter_Editor : Editor
         {
             cc.Check_Module();
         }
+
+        if (GUILayout.Button("의상 체인지")) {
+            //cc.Change_All();
+        }
     }
 }

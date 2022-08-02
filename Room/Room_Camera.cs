@@ -13,8 +13,11 @@ public class Room_Camera : MonoBehaviour
     public bool is_camera;
 
     public Vector3 camera_empty, camera_position;
+    [System.NonSerialized]
     public Vector3 pos_wall01, pos_wall_accessory01, pos_ground_accessory01;
+    [System.NonSerialized]
     public Vector3 pos_wall02, pos_wall_accessory02, pos_ground_accessory02;
+    [System.NonSerialized]
     public Vector3 pos_ground, pos_chair01, pos_chair02, pos_table, pos_table_accessory;
 
     private float t;

@@ -45,6 +45,10 @@ public class Photon_Player : MonoBehaviourPunCallbacks, IPunObservable
             TMP.text = PV.IsMine ? PhotonNetwork.NickName : PV.Owner.NickName;
             is_load = true;
         }
+
+        if (PhotonNetwork.LocalPlayer.NickName == "") {
+            PhotonNetwork.LocalPlayer.NickName = CI.userName;
+        }
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

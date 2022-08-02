@@ -20,11 +20,12 @@ public class Player_Camera : MonoBehaviourPunCallbacks, IPunObservable
     public Transform Player_Transform;
 
     private Transform Camera_Arm;
-    public Transform Player_Canvas;
+    //public Transform Player_Canvas;
     private GameObject Main_Camera;
 
     private RaycastHit camera_hit;
     private Player_Movement PM;
+    private Player_Console PC;
 
     private void Start()
     {
@@ -36,13 +37,15 @@ public class Player_Camera : MonoBehaviourPunCallbacks, IPunObservable
         Main_Camera = this.gameObject;
 
         PM = Player_Transform.GetComponent<Player_Movement>();
-        Player_Canvas = Player_Transform.GetChild(9).transform;
+        PC = GameObject.Find("World_Console").GetComponent<Player_Console>();
+        //Player_Canvas = Player_Transform.GetChild(9).transform;
     }
 
     private void Update()
     {
         Camera_Arm.position = Player_Transform.transform.position + new Vector3(0f, 6.2f, 0f);
-        Player_Canvas.rotation = Quaternion.LookRotation(dir_nor);
+        //Player_Canvas.rotation = Quaternion.LookRotation(dir_nor);
+        Rotate_Canvas();
 
         Mouse_Movement();
         Input_whell();
@@ -100,6 +103,16 @@ public class Player_Camera : MonoBehaviourPunCallbacks, IPunObservable
         }
 
         Debug.DrawRay(Reset_Transform.transform.position, camera_dir, Color.blue);
+    }
+
+    public void Rotate_Canvas()
+    {
+        for (int i = 0; i < PC.all_player.Length; i++) {
+            if (PC.all_player[i] != null) {
+                Transform Player_Canvas = PC.all_player[i].transform.GetChild(9).transform;
+                Player_Canvas.rotation = Quaternion.LookRotation(dir_nor);
+            }
+        }
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

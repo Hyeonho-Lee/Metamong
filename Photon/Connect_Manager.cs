@@ -14,11 +14,9 @@ public class Connect_Manager : MonoBehaviourPunCallbacks
     public GameObject loading_camera;
     public GameObject player;
 
-    public Text ChatText;
     public InputField ChatInput;
 
     private PhotonView PV;
-    private Photon_Player PP;
 
 
     private void Start()
@@ -27,7 +25,6 @@ public class Connect_Manager : MonoBehaviourPunCallbacks
         PhotonNetwork.ConnectUsingSettings();
 
         PV = GetComponent<PhotonView>();
-        ChatText.text = "";
     }
 
     private void Update()
@@ -50,8 +47,6 @@ public class Connect_Manager : MonoBehaviourPunCallbacks
         loading_camera.SetActive(false);
         PhotonNetwork.Instantiate(player.name, new Vector3(Random.Range(-5f, 3f), -2, 0), Quaternion.identity);
         ChatInput.text = "";
-
-        PP = GameObject.Find("Character(Clone)").GetComponent<Photon_Player>();
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
@@ -59,15 +54,9 @@ public class Connect_Manager : MonoBehaviourPunCallbacks
         PhotonNetwork.CreateRoom("main_room", new RoomOptions { MaxPlayers = 50 });
     }
 
-    public void OnSendChatMsg()
-    {
-        PV.RPC("ChatRPC", RpcTarget.All, "<color=white><b>" + PP.PlayerNickName + " :</b></color> " + ChatInput.text);
-        ChatInput.text = "";
-    }
-
-    [PunRPC]
-    void ChatRPC(string msg)
-    {
-        ChatText.text += msg + "\n";
-    }
+    //public override void OnPlayerEnteredRoom(Player newPlayer)
+    //{
+        //print("새로운 플레이어 접속");
+    //}
+    //onplayerenterdroom player타입에 아무거나 
 }

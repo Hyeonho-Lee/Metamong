@@ -11,6 +11,7 @@ public class Player_Movement : MonoBehaviourPunCallbacks, IPunObservable
     public float vertical;
 
     public bool is_move;
+    public bool is_dash;
     public bool is_room;
 
     private float t;
@@ -89,15 +90,32 @@ public class Player_Movement : MonoBehaviourPunCallbacks, IPunObservable
             is_move = false;
         }
 
+        if (Input.GetKeyDown(KeyCode.LeftShift) && is_move) {
+            is_dash = true;
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftShift) || !is_move) {
+            timeStart = Time.time;
+            t = 0;
+            move_speed = (1 - t) * first_speed + t * end_speed;
+            is_dash = false;
+        }
+
         if (is_room) {
             player_dir = new Vector3(1, 0, 1);
             timeDuration = 1.0f;
             first_speed = 0.5f;
             end_speed = 1.5f;
         }else {
-            timeDuration = 2.0f;
-            first_speed = 4.0f;
-            end_speed = 7.0f;
+            if (is_dash) {
+                timeDuration = 2.0f;
+                first_speed = 6.0f;
+                end_speed = 11.0f;
+            }else {
+                timeDuration = 2.0f;
+                first_speed = 4.0f;
+                end_speed = 7.0f;
+            }
         }
 
         if (!is_move) {
@@ -113,6 +131,7 @@ public class Player_Movement : MonoBehaviourPunCallbacks, IPunObservable
 
         motion.SetFloat("horizontal", movement.x);
         motion.SetFloat("vertical", movement.z);
+        motion.SetBool("is_dash", is_dash);
 
         //player_dir = tpscamera.player_dir.normalized;
     }
