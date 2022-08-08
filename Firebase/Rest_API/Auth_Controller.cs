@@ -27,6 +27,7 @@ public class Auth_Controller : MonoBehaviour
     public CC_User cc_user = new CC_User();
     public CC_DB cc_db = new CC_DB();
     public RC_User rc_user = new RC_User();
+    public RC_DB rc_db = new RC_DB();
 
     #region 회원가입
 
@@ -186,7 +187,6 @@ public class Auth_Controller : MonoBehaviour
                     cc_user.top = response.top;
                     cc_user.username = response.username;
                     cc_user.uid = response.uid;
-                    Debug.Log("아바타 가져오기 완료");
                 });
                 break;
             case "character_db":
@@ -243,8 +243,6 @@ public class Auth_Controller : MonoBehaviour
                     for (int i = 0; i < response.top.Count; i++) {
                         cc_db.top.Add(response.top[i]);
                     }
-
-                    Debug.Log("캐릭터 데이터 불러오기 완료");
                 });
                 break;
             case "room_custom":
@@ -263,6 +261,54 @@ public class Auth_Controller : MonoBehaviour
                     rc_user.table = response.table;
                     rc_user.table_accessory01 = response.table_accessory01;
                     //Debug.Log("아바타 가져오기 완료");
+                });
+                break;
+            case "room_db":
+                RestClient.Get<RC_DB>(database_url + "/room_db.json").Then(response => {
+
+                    for (int i = 0; i < response.Chair01.Count; i++) {
+                        rc_db.Chair01.Add(response.Chair01[i]);
+                    }
+
+                    for (int i = 0; i < response.Chair02.Count; i++) {
+                        rc_db.Chair02.Add(response.Chair02[i]);
+                    }
+
+                    for (int i = 0; i < response.Ground.Count; i++) {
+                        rc_db.Ground.Add(response.Ground[i]);
+                    }
+
+                    for (int i = 0; i < response.Ground_Accessory01.Count; i++) {
+                        rc_db.Ground_Accessory01.Add(response.Ground_Accessory01[i]);
+                    }
+
+                    for (int i = 0; i < response.Ground_Accessory02.Count; i++) {
+                        rc_db.Ground_Accessory02.Add(response.Ground_Accessory02[i]);
+                    }
+
+                    for (int i = 0; i < response.Table.Count; i++) {
+                        rc_db.Table.Add(response.Table[i]);
+                    }
+
+                    for (int i = 0; i < response.Table_Accessory01.Count; i++) {
+                        rc_db.Table_Accessory01.Add(response.Table_Accessory01[i]);
+                    }
+
+                    for (int i = 0; i < response.Wall01.Count; i++) {
+                        rc_db.Wall01.Add(response.Wall01[i]);
+                    }
+
+                    for (int i = 0; i < response.Wall02.Count; i++) {
+                        rc_db.Wall02.Add(response.Wall02[i]);
+                    }
+
+                    for (int i = 0; i < response.Wall_Accessory01.Count; i++) {
+                        rc_db.Wall_Accessory01.Add(response.Wall_Accessory01[i]);
+                    }
+
+                    for (int i = 0; i < response.Wall_Accessory02.Count; i++) {
+                        rc_db.Wall_Accessory02.Add(response.Wall_Accessory02[i]);
+                    }
                 });
                 break;
         }
@@ -294,8 +340,18 @@ public class Auth_Controller : MonoBehaviour
         PostToDatabase("room_custom");
     }
 
-    public void Get_Room()
+    public void Get_Room_Custom()
     {
         GetToDatabase("room_custom");
+    }
+
+    public void Get_Room_Info()
+    {
+        GetToDatabase("room_info");
+    }
+
+    public void Get_Room_DB()
+    {
+        GetToDatabase("room_db");
     }
 }

@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class SendCharacterInfo : MonoBehaviour
 {
-    private Customize_Character cc;
+    private Custom_Character_Offline cc;
     private Auth_Controller ac;
 
     private void Start()
     {
-        cc = GameObject.Find("Character").GetComponent<Customize_Character>();
+        cc = GameObject.Find("Custom_Character").GetComponent<Custom_Character_Offline>();
 
         if (GameObject.Find("Title_Console")) {
             ac = GameObject.Find("Title_Console").GetComponent<Auth_Controller>();
@@ -32,7 +32,7 @@ public class SendCharacterInfo : MonoBehaviour
     {
         ac.Get_Character_Button();
         
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.5f);
 
         cc.character.eyebrow = ac.cc_user.eyebrow;
         cc.character.eye = ac.cc_user.eye;
@@ -48,19 +48,6 @@ public class SendCharacterInfo : MonoBehaviour
         cc.character.accessory02 = ac.cc_user.accessory02;
         cc.character.helmet = ac.cc_user.helmet;
 
-        cc.Change_Character("Eyebrow_Part", "eyebrow");
-        cc.Change_Character("Eyebrow_Part", "eyebrow");
-        cc.Change_Character("Eye_Part", "eye");
-        cc.Change_Character("Beard_Part", "beard");
-        cc.Change_Character("Mouth_Part", "mouth");
-        cc.Change_Character("Hair_Part", "hair");
-        cc.Change_Character("Head_Part", "head");
-        cc.Change_Character("Top_Part", "top");
-        cc.Change_Character("Pants_Part", "pants");
-        cc.Change_Character("Shoes_Part", "shoes");
-        cc.Change_Character("Gloves_Part", "gloves");
-        cc.Change_Character("Accessory01_Part", "accessory01");
-        cc.Change_Character("Accessory02_Part", "accessory02");
-        cc.Change_Character("Helmet_Part", "helmet");
+        cc.Change_All();
     }
 }

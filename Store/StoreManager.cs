@@ -12,20 +12,20 @@ public class StoreManager : MonoBehaviour
 
     public GameObject item_button;
 
-    private Customize_Character cc;
+    private Custom_Character_Offline cc;
     private Customize_StoreBnt cs;
 
     private Auth_Controller ac;
 
     private void Awake()
     {
-        cc = GameObject.Find("Character").GetComponent<Customize_Character>();
+        cc = GameObject.Find("Custom_Character").GetComponent<Custom_Character_Offline>();
         cs = GetComponent<Customize_StoreBnt>();
 
         if (GameObject.Find("Title_Console")) {
             ac = GameObject.Find("Title_Console").GetComponent<Auth_Controller>();
             ac.Get_Character_DB();
-            ac.Get_Character_Button();
+            StartCoroutine(Load_Characters());
         } else {
             print("오프라인 입니다.");
         }
@@ -364,4 +364,27 @@ public class StoreManager : MonoBehaviour
         }
     }
     #endregion
+
+    IEnumerator Load_Characters()
+    {
+        ac.Get_Character_Button();
+
+        yield return new WaitForSeconds(1.0f);
+
+        cc.character.eyebrow = ac.cc_user.eyebrow;
+        cc.character.eye = ac.cc_user.eye;
+        cc.character.beard = ac.cc_user.beard;
+        cc.character.mouth = ac.cc_user.mouth;
+        cc.character.hair = ac.cc_user.hair;
+        cc.character.head = ac.cc_user.head;
+        cc.character.top = ac.cc_user.top;
+        cc.character.pants = ac.cc_user.pants;
+        cc.character.shoes = ac.cc_user.shoes;
+        cc.character.gloves = ac.cc_user.gloves;
+        cc.character.accessory01 = ac.cc_user.accessory01;
+        cc.character.accessory02 = ac.cc_user.accessory02;
+        cc.character.helmet = ac.cc_user.helmet;
+
+        cc.Change_All();
+    }
 }

@@ -14,11 +14,18 @@ public class Room_Console : MonoBehaviour
     public string label_text;
 
     private Room_Camera room_camera;
+    private Customize_Room_Bnt cr;
+    private RoomManager rm;
 
-    void Start()
+    private void Awake()
     {
         room_camera = GetComponent<Room_Camera>();
+        cr = GetComponent<Customize_Room_Bnt>();
+        rm = GetComponent<RoomManager>();
+    }
 
+    private void Start()
+    {
         state = 0;
 
         if (state == 0){
@@ -37,66 +44,77 @@ public class Room_Console : MonoBehaviour
                     room_camera.is_camera = true;
                     room_camera.camera_empty = room_camera.pos_wall01;
                     room_camera.camera_zoom = room_camera.camera_zoom_2;
+                    rm.Create_Button(cr.room_moudles.wall01.Count, label_text);
                     label_text = "";
                     break;
                 case "벽장식1":
                     room_camera.is_camera = true;
                     room_camera.camera_empty = room_camera.pos_wall_accessory01;
                     room_camera.camera_zoom = room_camera.camera_zoom_2;
+                    rm.Create_Button(cr.room_moudles.wall_accessory01.Count, label_text);
                     label_text = "";
                     break;
                 case "장식1":
                     room_camera.is_camera = true;
                     room_camera.camera_empty = room_camera.pos_ground_accessory01;
                     room_camera.camera_zoom = room_camera.camera_zoom_1;
+                    rm.Create_Button(cr.room_moudles.ground_accessory01.Count, label_text);
                     label_text = "";
                     break;
                 case "벽지2":
                     room_camera.is_camera = true;
                     room_camera.camera_empty = room_camera.pos_wall02;
                     room_camera.camera_zoom = room_camera.camera_zoom_2;
+                    rm.Create_Button(cr.room_moudles.wall02.Count, label_text);
                     label_text = "";
                     break;
                 case "벽장식2":
                     room_camera.is_camera = true;
                     room_camera.camera_empty = room_camera.pos_wall_accessory02;
                     room_camera.camera_zoom = room_camera.camera_zoom_2;
+                    rm.Create_Button(cr.room_moudles.wall_accessory02.Count, label_text);
                     label_text = "";
                     break;
                 case "장식2":
                     room_camera.is_camera = true;
                     room_camera.camera_empty = room_camera.pos_ground_accessory02;
                     room_camera.camera_zoom = room_camera.camera_zoom_1;
+                    rm.Create_Button(cr.room_moudles.ground_accessory02.Count, label_text);
                     label_text = "";
                     break;
                 case "타일":
                     room_camera.is_camera = true;
                     room_camera.camera_empty = room_camera.pos_ground;
                     room_camera.camera_zoom = room_camera.camera_zoom_2;
+                    rm.Create_Button(cr.room_moudles.ground.Count, label_text);
                     label_text = "";
                     break;
                 case "의자1":
                     room_camera.is_camera = true;
                     room_camera.camera_empty = room_camera.pos_chair01;
                     room_camera.camera_zoom = room_camera.camera_zoom_1;
+                    rm.Create_Button(cr.room_moudles.chair01.Count, label_text);
                     label_text = "";
                     break;
                 case "의자2":
                     room_camera.is_camera = true;
                     room_camera.camera_empty = room_camera.pos_chair02;
                     room_camera.camera_zoom = room_camera.camera_zoom_1;
+                    rm.Create_Button(cr.room_moudles.chair02.Count, label_text);
                     label_text = "";
                     break;
                 case "책상":
                     room_camera.is_camera = true;
                     room_camera.camera_empty = room_camera.pos_table;
                     room_camera.camera_zoom = room_camera.camera_zoom_1;
+                    rm.Create_Button(cr.room_moudles.table.Count, label_text);
                     label_text = "";
                     break;
                 case "소품":
                     room_camera.is_camera = true;
                     room_camera.camera_empty = room_camera.pos_table_accessory;
                     room_camera.camera_zoom = room_camera.camera_zoom_1;
+                    rm.Create_Button(cr.room_moudles.table_accessory01.Count, label_text);
                     label_text = "";
                     break;
             }

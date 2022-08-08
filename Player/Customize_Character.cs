@@ -508,6 +508,6 @@ public class Customize_Character : MonoBehaviourPunCallbacks, IPunObservable
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         //PV.RPC("Change_All", RpcTarget.AllBuffered);
-        print("새로운 플레이어 접속");
+        print(newPlayer + " 님이 접속하였습니다.");
     }
 }

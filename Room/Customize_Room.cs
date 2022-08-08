@@ -61,16 +61,8 @@ public class Customize_Room : MonoBehaviour
     public Room room = new Room();
     public Room_Moudle room_moudle = new Room_Moudle(); //아이템 개체 생성
 
-    private Auth_Controller ac;
-
     private void Start()
     {
-        if (GameObject.Find("Title_Console")) {
-            ac = GameObject.Find("Title_Console").GetComponent<Auth_Controller>();
-        } else {
-            print("오프라인 입니다.");
-        }
-
         Check_Prefab();
         Check_Module();
     }

@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using TMPro;
 using Photon.Pun;
 using Photon.Realtime;
-using TMPro;
-using UnityEngine.SceneManagement;
+using Photon.Voice.Unity;
+using Photon.Voice.PUN;
 
 public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -13,6 +15,10 @@ public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
     public GameObject UpdateText; // 말풍선 텍스트
     public GameObject Nickname_Text;
     public GameObject Emotional_Panel;
+    public GameObject Icons;
+
+    public Sprite[] All_Icons;
+    public Image voice_on;
 
     public int emotion_value;
 
@@ -23,6 +29,8 @@ public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
     private InputField ChatInputField; //체팅 하는 필드
     private Animator Chat_Ani;
     private Animator Player_Ani;
+    private Player_Console PC;
+    private Player_Cursor P_Cursor;
 
     private float chat_time;
     private float chat_realtime;
@@ -31,6 +39,7 @@ public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
     private bool focus_break;
 
     private PhotonView PV;
+    private PhotonVoiceView PVV;
     private Photon_Player PP;
     private Player_Movement PM;
     private TextMeshProUGUI TMP;
@@ -40,9 +49,12 @@ public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
         ChatInputField = GameObject.Find("Chat_InputField").GetComponent<InputField>();
         ChatText = GameObject.Find("All_Chat").GetComponent<Text>();
         Chat_Ani = GameObject.Find("Chat_Panel").GetComponent<Animator>();
+        PC = GameObject.Find("World_Console").GetComponent<Player_Console>();
+        P_Cursor = GameObject.Find("World_Console").GetComponent<Player_Cursor>();
         Player_Ani = GetComponent<Animator>();
 
         PV = GetComponent<PhotonView>();
+        PVV = GetComponent<PhotonVoiceView>();
         PP = GetComponent<Photon_Player>();
         PM = GetComponent<Player_Movement>();
         TMP = UpdateText.GetComponent<TextMeshProUGUI>();
@@ -64,6 +76,8 @@ public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
 
         BubbleSpeechObject.SetActive(false);
         Emotional_Panel.SetActive(false);
+
+        Icons.GetComponent<Image>().sprite = null;
     }
 
     private void Update()
@@ -126,8 +140,9 @@ public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
             }
 
             if (ChatInputField.text != "" && ChatInputField.text.Length > 0 && Input.GetKeyDown(KeyCode.Return)) {
+                Icons.GetComponent<Image>().sprite = null;
                 PV.RPC("SendMassage", RpcTarget.All, ChatInputField.text);
-                PV.RPC("ChatRPC", RpcTarget.All, "<color=white><b>" + PP.PlayerNickName + " :</b></color> " + ChatInputField.text);
+                PV.RPC("ChatRPC", RpcTarget.All, "<color=white><b> [유저] " + PP.PlayerNickName + " :</b></color>  " + ChatInputField.text);
                 ChatInputField.text = "";
                 focus_break = false;
             }else if (!focus_chat && Input.GetKeyDown(KeyCode.Return)) {
@@ -141,6 +156,17 @@ public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
 
             if (Input.GetKeyUp(KeyCode.Tab)) {
                 is_tab = false;
+            }
+
+            if (PC.button_value != 0) {
+                Start_Icons(PC.button_value - 1);
+                PC.button_value = 0;
+            }
+
+            if (P_Cursor.is_voice) {
+                PV.RPC("VoiceIcon_on", RpcTarget.All);
+            }else {
+                PV.RPC("VoiceIcon_off", RpcTarget.All);
             }
         }
     }
@@ -166,6 +192,12 @@ public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    public void Start_Icons(int value)
+    {
+        PV.RPC("SendMassage", RpcTarget.All, "");
+        PV.RPC("SendIcon", RpcTarget.All, value);
+    }
+
     [PunRPC]
     private void SendMassage(string msg)
     {
@@ -173,12 +205,31 @@ public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
         chat_realtime = 0;
         TMP.text = msg;
         BubbleSpeechObject.SetActive(true);
+        Icons.GetComponent<Image>().sprite = null;
     }
 
     [PunRPC]
     void ChatRPC(string msg)
     {
         ChatText.text += msg + "\n";
+    }
+
+    [PunRPC]
+    private void SendIcon(int value)
+    {
+        Icons.GetComponent<Image>().sprite = All_Icons[value];
+    }
+
+    [PunRPC]
+    private void VoiceIcon_on()
+    {
+        voice_on.enabled = true;
+    }
+
+    [PunRPC]
+    private void VoiceIcon_off()
+    {
+        voice_on.enabled = false;
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
