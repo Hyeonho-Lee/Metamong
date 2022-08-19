@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class Room_Console : MonoBehaviour
 {
@@ -32,11 +33,21 @@ public class Room_Console : MonoBehaviour
             Location.SetActive(false);
             RoomPanel.SetActive(false);
         }
+
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.Confined;
+
+        if (state == 0) {
+            state = 1;
+
+            Location.SetActive(true);
+            RoomPanel.SetActive(false);
+        }
     }
 
     void Update()
     {
-        Input_key();
+        //Input_key();
 
         if (!room_camera.is_camera) {
             switch (label_text) {
@@ -177,4 +188,18 @@ public class Room_Console : MonoBehaviour
             btn.GetComponent<Button>().onClick.AddListener(() => Test());
         }
     }*/
+
+    public void Change_Scene()
+    {
+        GameObject Send_Info = GameObject.Find("Send_Info");
+        Send_Info.name = "Title_Console";
+
+        GameObject Send_Spawn = Instantiate(Send_Info); ;
+        Send_Spawn.name = "Send_Spawn";
+
+        DontDestroyOnLoad(Send_Info);
+        DontDestroyOnLoad(Send_Spawn);
+
+        SceneManager.LoadScene("Main_World");
+    }
 }

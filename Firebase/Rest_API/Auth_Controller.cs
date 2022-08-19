@@ -21,6 +21,7 @@ public class Auth_Controller : MonoBehaviour
     public string idToken;
     public string localId;
     public string error_code;
+    public string world_position;
 
     [Header("Data Info")]
     public User user = new User();
@@ -28,6 +29,7 @@ public class Auth_Controller : MonoBehaviour
     public CC_DB cc_db = new CC_DB();
     public RC_User rc_user = new RC_User();
     public RC_DB rc_db = new RC_DB();
+    public RC_Info rc_info = new RC_Info();
 
     #region 회원가입
 
@@ -192,6 +194,8 @@ public class Auth_Controller : MonoBehaviour
             case "character_db":
                 RestClient.Get<CC_DB>(database_url + "/character_db.json").Then(response => {
 
+                    //print(response.accessory01[0]);
+
                     for (int i = 0; i < response.accessory01.Count; i++) {
                         cc_db.accessory01.Add(response.accessory01[i]);
                     }
@@ -260,7 +264,9 @@ public class Auth_Controller : MonoBehaviour
                     rc_user.chair02 = response.chair02;
                     rc_user.table = response.table;
                     rc_user.table_accessory01 = response.table_accessory01;
-                    //Debug.Log("아바타 가져오기 완료");
+
+                    rc_user.username = response.username;
+                    rc_user.uid = response.uid;
                 });
                 break;
             case "room_db":
@@ -311,10 +317,39 @@ public class Auth_Controller : MonoBehaviour
                     }
                 });
                 break;
+            case "user_info":
+                RestClient.Get<User>(database_url + "/user/" + localId + ".json?auth=" + idToken).Then(response => {
+                    user.email = response.email;
+                    user.password = response.password;
+                    user.uid = response.uid;
+                    user.username = response.username;
+                    user.money = response.money;
+                    user.is_user = response.is_user;
+                    user.is_counselor = response.is_counselor;
+                    user.is_counselor_check = response.is_counselor_check;
+                    user.is_admin = response.is_admin;
+                });
+                break;
+            case "room_info":
+                //rc_info.position = new List<RC_Info_Value>();
+                RestClient.Get<RC_Info>(database_url + "/room_info.json").Then(response => {
+                    for (int i = 0; i < response.position.Count; i++) {
+                        rc_info.position.Add(response.position[i]);
+                    }
+                });
+                break;
         }
     }
 
     #endregion
+    //--------------------------------------------//
+
+    public void Get_User_Info()
+    {
+        GetToDatabase("user_info");
+    }
+
+    //--------------------------------------------//
 
     public void Update_Character_Button()
     {
@@ -326,8 +361,6 @@ public class Auth_Controller : MonoBehaviour
         GetToDatabase("character_custom");
     }
 
-    //--------------------------------------------//
-
     public void Get_Character_DB()
     {
         GetToDatabase("character_db");
@@ -335,7 +368,7 @@ public class Auth_Controller : MonoBehaviour
 
     //--------------------------------------------//
 
-    public void Update_Room()
+    public void Update_Room_Custom()
     {
         PostToDatabase("room_custom");
     }

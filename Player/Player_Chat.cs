@@ -141,7 +141,7 @@ public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
 
             if (ChatInputField.text != "" && ChatInputField.text.Length > 0 && Input.GetKeyDown(KeyCode.Return)) {
                 Icons.GetComponent<Image>().sprite = null;
-                PV.RPC("SendMassage", RpcTarget.All, ChatInputField.text);
+                PV.RPC("SendMessage", RpcTarget.All, ChatInputField.text);
                 PV.RPC("ChatRPC", RpcTarget.All, "<color=white><b> [À¯Àú] " + PP.PlayerNickName + " :</b></color>  " + ChatInputField.text);
                 ChatInputField.text = "";
                 focus_break = false;
@@ -194,12 +194,12 @@ public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Start_Icons(int value)
     {
-        PV.RPC("SendMassage", RpcTarget.All, "");
+        PV.RPC("SendMessage", RpcTarget.All, "");
         PV.RPC("SendIcon", RpcTarget.All, value);
     }
 
     [PunRPC]
-    private void SendMassage(string msg)
+    private void SendMessage(string msg)
     {
         is_chat = false;
         chat_realtime = 0;

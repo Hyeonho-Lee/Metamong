@@ -14,18 +14,16 @@ public class RoomManager : MonoBehaviour
     private Customize_Room_Bnt cr;
     private Auth_Controller ac;
 
-    private void Awake()
+    private void Start()
     {
         customize_room = GameObject.Find("Room_Console").GetComponent<Customize_Room>();
         cr = GetComponent<Customize_Room_Bnt>();
 
-        if (GameObject.Find("Title_Console")) {
-            ac = GameObject.Find("Title_Console").GetComponent<Auth_Controller>();
+        if (GameObject.Find("Send_Info")) {
+            ac = GameObject.Find("Send_Info").GetComponent<Auth_Controller>();
             ac.Get_Room_DB();
             ac.Get_Room_Custom();
             StartCoroutine(Load_RoomCustom());
-        } else {
-            print("오프라인 입니다.");
         }
     }
 
@@ -40,7 +38,7 @@ public class RoomManager : MonoBehaviour
             Bntt.name = i.ToString();
             Bntt.transform.SetParent(Parents);
             Bntt.transform.localScale = new Vector3(1, 1, 1);
-            Bntt.GetComponent<Button>().onClick.AddListener(() => customize_room.Check_Module());
+            Bntt.GetComponent<Button>().onClick.AddListener(() => customize_room.Change_Module());
 
             GameObject item_name = Bntt.transform.Find("ItemName").gameObject;
             Text bntt_name = item_name.GetComponent<Text>();
@@ -58,54 +56,54 @@ public class RoomManager : MonoBehaviour
                     bntt_price.text = ac.rc_db.Wall01[i].price.ToString() + " G";
                     break;
                 case "벽장식1":
-                    //bnttImage.sprite = [i];
-                    //bntt_name.text = i + "d우와";
-                    //bntt_price.text = "10 G";
+                    bnttImage.sprite = cr.room_moudles.wall_accessory01[i];
+                    bntt_name.text = ac.rc_db.Wall_Accessory01[i].name_kr;
+                    bntt_price.text = ac.rc_db.Wall_Accessory01[i].price.ToString() + " G";
                     break;
                 case "장식1":
-                    //bnttImage.sprite = [i];
-                    //bntt_name.text = i + "d우와";
-                    //bntt_price.text = "10 G";
+                    bnttImage.sprite = cr.room_moudles.ground_accessory01[i];
+                    bntt_name.text = ac.rc_db.Ground_Accessory01[i].name_kr;
+                    bntt_price.text = ac.rc_db.Ground_Accessory01[i].price.ToString() + " G";
                     break;
                 case "벽지2":
-                    //bnttImage.sprite = [i];
-                    //bntt_name.text = i + "d우와";
-                    //bntt_price.text = "10 G";
+                    bnttImage.sprite = cr.room_moudles.wall02[i];
+                    bntt_name.text = ac.rc_db.Wall02[i].name_kr;
+                    bntt_price.text = ac.rc_db.Wall02[i].price.ToString() + " G";
                     break;
                 case "벽장식2":
-                    //bnttImage.sprite = [i];
-                    //bntt_name.text = i + "d우와";
-                    //bntt_price.text = "10 G";
+                    bnttImage.sprite = cr.room_moudles.wall_accessory02[i];
+                    bntt_name.text = ac.rc_db.Wall_Accessory02[i].name_kr;
+                    bntt_price.text = ac.rc_db.Wall_Accessory02[i].price.ToString() + " G";
                     break;
                 case "장식2":
-                    //bnttImage.sprite = [i];
-                    //bntt_name.text = i + "d우와";
-                    //bntt_price.text = "10 G";
+                    bnttImage.sprite = cr.room_moudles.ground_accessory02[i];
+                    bntt_name.text = ac.rc_db.Ground_Accessory02[i].name_kr;
+                    bntt_price.text = ac.rc_db.Ground_Accessory02[i].price.ToString() + " G";
                     break;
                 case "타일":
-                    //bnttImage.sprite = [i];
-                    //bntt_name.text = i + "d우와";
-                    //bntt_price.text = "10 G";
+                    bnttImage.sprite = cr.room_moudles.ground[i];
+                    bntt_name.text = ac.rc_db.Ground[i].name_kr;
+                    bntt_price.text = ac.rc_db.Ground[i].price.ToString() + " G";
                     break;
                 case "의자1":
-                    //bnttImage.sprite = [i];
-                    //bntt_name.text = i + "d우와";
-                    //bntt_price.text = "10 G";
+                    bnttImage.sprite = cr.room_moudles.chair01[i];
+                    bntt_name.text = ac.rc_db.Chair01[i].name_kr;
+                    bntt_price.text = ac.rc_db.Chair01[i].price.ToString() + " G";
                     break;
                 case "의자2":
-                    //bnttImage.sprite = [i];
-                    //bntt_name.text = i + "d우와";
-                    //bntt_price.text = "10 G";
+                    bnttImage.sprite = cr.room_moudles.chair02[i];
+                    bntt_name.text = ac.rc_db.Chair02[i].name_kr;
+                    bntt_price.text = ac.rc_db.Chair02[i].price.ToString() + " G";
                     break;
                 case "책상":
-                    //bnttImage.sprite = [i];
-                    //bntt_name.text = i + "d우와";
-                    //bntt_price.text = "10 G";
+                    bnttImage.sprite = cr.room_moudles.table[i];
+                    bntt_name.text = ac.rc_db.Table[i].name_kr;
+                    bntt_price.text = ac.rc_db.Table[i].price.ToString() + " G";
                     break;
                 case "소품":
-                    //bnttImage.sprite = [i];
-                    //bntt_name.text = i + "d우와";
-                    //bntt_price.text = "10 G";
+                    bnttImage.sprite = cr.room_moudles.table_accessory01[i];
+                    bntt_name.text = ac.rc_db.Table_Accessory01[i].name_kr;
+                    bntt_price.text = ac.rc_db.Table_Accessory01[i].price.ToString() + " G";
                     break;
             }
         }

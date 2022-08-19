@@ -9,6 +9,7 @@ public class Character_Info : MonoBehaviourPunCallbacks, IPunObservable
     public string userName;
     public string localId;
     public string idToken;
+    public string world_position;
     public bool is_load;
 
     private Customize_Character cc;
@@ -26,9 +27,12 @@ public class Character_Info : MonoBehaviourPunCallbacks, IPunObservable
         if (PV.IsMine) {
             if (GameObject.Find("Title_Console")) {
                 GameObject empty = GameObject.Find("Title_Console");
-                userName = empty.gameObject.GetComponent<Auth_Controller>().userName;
-                localId = empty.gameObject.GetComponent<Auth_Controller>().localId;
-                idToken = empty.gameObject.GetComponent<Auth_Controller>().idToken;
+                Auth_Controller AC = empty.gameObject.GetComponent<Auth_Controller>();
+                userName = AC.userName;
+                localId = AC.localId;
+                idToken = AC.idToken;
+                world_position = AC.world_position;
+
                 Destroy(empty);
             }
 
@@ -39,7 +43,7 @@ public class Character_Info : MonoBehaviourPunCallbacks, IPunObservable
             }
 
             if (userName != null && localId != null && cc != null && !is_load) {
-                Load_Character();
+                StartCoroutine(Load_Characters());
                 is_load = true;
             }
         }
@@ -57,10 +61,16 @@ public class Character_Info : MonoBehaviourPunCallbacks, IPunObservable
         ac.userName = userName;
         ac.localId = localId;
         ac.idToken = idToken;
+        ac.world_position = world_position;
 
+        ac.Get_User_Info();
         ac.Get_Character_Button();
+        ac.Get_Character_DB();
+        ac.Get_Room_Custom();
+        ac.Get_Room_DB();
+        ac.Get_Room_Info();
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1.0f);
 
         cc.character.eyebrow = ac.cc_user.eyebrow;
         cc.character.eye = ac.cc_user.eye;

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class Player_Console : MonoBehaviour
 {
     public GameObject[] all_player;
+    public GameObject[] All_Canvas;
 
     public GameObject Icon_Panel;
     public Button[] Emotion_All;
@@ -26,6 +27,7 @@ public class Player_Console : MonoBehaviour
 
         Icon_Panel = GameObject.Find("Icon_Panel");
         Emotion_All = Icon_Panel.transform.GetChild(2).GetComponentsInChildren<Button>();
+        All_Canvas = GameObject.FindGameObjectsWithTag("All_Canvas");
 
         for (int i = 0; i < Emotion_All.Length; i++) {
             Button emotion = Emotion_All[i].GetComponent<Button>();

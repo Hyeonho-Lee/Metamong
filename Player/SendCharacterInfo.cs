@@ -11,8 +11,8 @@ public class SendCharacterInfo : MonoBehaviour
     {
         cc = GameObject.Find("Custom_Character").GetComponent<Custom_Character_Offline>();
 
-        if (GameObject.Find("Title_Console")) {
-            ac = GameObject.Find("Title_Console").GetComponent<Auth_Controller>();
+        if (GameObject.Find("Send_Info")) {
+            ac = GameObject.Find("Send_Info").GetComponent<Auth_Controller>();
         } else {
             print("오프라인 입니다.");
         }

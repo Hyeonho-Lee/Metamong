@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Store_Console : MonoBehaviour
 {
@@ -24,12 +25,26 @@ public class Store_Console : MonoBehaviour
             store_trigger = false;
             StorePanel.SetActive(false);
         }
+
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.Confined;
+
+        StorePanel.SetActive(true);
+        store_trigger = true;
+
+        sm.input_value = null;
+
+        FacePanel.SetActive(false);
+        ClothesPanel.SetActive(false);
+        AccessoryPanel.SetActive(false);
+
+        sm.Delete_Button();
     }
 
 
     private void Update()
     {
-        Input_key();
+        //Input_key();
     }
 
     #region »óÁ¡ ¿ÀÇÂ, ´Ý±â
@@ -99,7 +114,7 @@ public class Store_Console : MonoBehaviour
         sm.Delete_Button();
     }
 
-    public void Click_Aceessory()
+    public void Click_Accessory()
     {
         FacePanel.SetActive(false);
         ClothesPanel.SetActive(false);
@@ -114,7 +129,20 @@ public class Store_Console : MonoBehaviour
     {
         sm.input_value = name;
         sm.Delete_Button();
-        sm.Create_Bnt();
+        sm.Create_Btn();
     }
     #endregion
+
+    public void Change_Scene()
+    {
+        GameObject Send_Info = GameObject.Find("Send_Info");
+        Send_Info.name = "Title_Console";
+
+        GameObject Send_Spawn = Instantiate(Send_Info); ;
+        Send_Spawn.name = "Send_Spawn";
+
+        DontDestroyOnLoad(Send_Info);
+        DontDestroyOnLoad(Send_Spawn);
+        SceneManager.LoadScene("Main_World");
+    }
 }

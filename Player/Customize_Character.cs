@@ -510,4 +510,9 @@ public class Customize_Character : MonoBehaviourPunCallbacks, IPunObservable
         //PV.RPC("Change_All", RpcTarget.AllBuffered);
         print(newPlayer + " 님이 접속하였습니다.");
     }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        print(otherPlayer + " 님이 나갔습니다.");
+    }
 }

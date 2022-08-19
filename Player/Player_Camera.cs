@@ -110,7 +110,18 @@ public class Player_Camera : MonoBehaviourPunCallbacks, IPunObservable
         for (int i = 0; i < PC.all_player.Length; i++) {
             if (PC.all_player[i] != null) {
                 Transform Player_Canvas = PC.all_player[i].transform.GetChild(9).transform;
-                Player_Canvas.rotation = Quaternion.LookRotation(dir_nor);
+                if (dir_nor != Vector3.zero) {
+                    Player_Canvas.rotation = Quaternion.LookRotation(dir_nor);
+                }
+            }
+        }
+
+        for (int i = 0; i < PC.All_Canvas.Length; i++) {
+            if (PC.All_Canvas[i] != null) {
+                Transform All_Canvas = PC.All_Canvas[i].transform;
+                if (dir_nor != Vector3.zero) {
+                    All_Canvas.rotation = Quaternion.LookRotation(dir_nor);
+                }
             }
         }
     }

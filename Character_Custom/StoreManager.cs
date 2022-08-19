@@ -17,14 +17,13 @@ public class StoreManager : MonoBehaviour
 
     private Auth_Controller ac;
 
-    private void Awake()
+    private void Start()
     {
         cc = GameObject.Find("Custom_Character").GetComponent<Custom_Character_Offline>();
         cs = GetComponent<Customize_StoreBnt>();
 
-        if (GameObject.Find("Title_Console")) {
-            ac = GameObject.Find("Title_Console").GetComponent<Auth_Controller>();
-            ac.Get_Character_DB();
+        if (GameObject.Find("Send_Info")) {
+            ac = GameObject.Find("Send_Info").GetComponent<Auth_Controller>();
             StartCoroutine(Load_Characters());
         } else {
             print("오프라인 입니다.");
@@ -33,7 +32,7 @@ public class StoreManager : MonoBehaviour
 
 
     #region 버튼 생성
-    public void Create_Bnt()
+    public void Create_Btn()
     {
         if (input_value != null) {
             switch (input_value) {

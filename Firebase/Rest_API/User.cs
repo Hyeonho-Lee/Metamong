@@ -13,5 +13,6 @@ public class User
     public bool is_user;
     public bool is_counselor;
     public bool is_counselor_check;
+    public bool is_admin;
     public int money;
 }

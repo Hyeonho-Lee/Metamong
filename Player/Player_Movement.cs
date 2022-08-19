@@ -34,16 +34,17 @@ public class Player_Movement : MonoBehaviourPunCallbacks, IPunObservable
 
     private Transform Bip001;
 
-    CharacterController cc;
-    Animator motion;
-
+    private CharacterController cc;
+    private Animator motion;
     private PhotonView PV;
+    private Character_Info CI;
 
     void Awake()
     {
         cc = GetComponent<CharacterController>();
-        PV = GetComponent<PhotonView>();
         motion = GetComponent<Animator>();
+        PV = GetComponent<PhotonView>();
+        CI = GetComponent<Character_Info>();
 
         //Bip001 = this.transform.GetChild(0);
         Bip001 = this.transform;
@@ -70,12 +71,12 @@ public class Player_Movement : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (PV.IsMine) {
             Move();
-        }else if ((transform.position - Current_Pos).sqrMagnitude >= 100) {
+        }else if ((transform.position - Current_Pos).sqrMagnitude >= 100.0f) {
             this.transform.position = Current_Pos;
             this.transform.rotation = Current_Rot;
         }else {
-            this.transform.position = Vector3.Lerp(this.transform.position, Current_Pos, Time.smoothDeltaTime * 10);
-            this.transform.rotation = Quaternion.Lerp(this.transform.rotation, Current_Rot, Time.smoothDeltaTime * 10);
+            this.transform.position = Vector3.Lerp(this.transform.position, Current_Pos, Time.smoothDeltaTime * 10.0f);
+            this.transform.rotation = Quaternion.Lerp(this.transform.rotation, Current_Rot, Time.smoothDeltaTime * 10.0f);
         }
     }
 
