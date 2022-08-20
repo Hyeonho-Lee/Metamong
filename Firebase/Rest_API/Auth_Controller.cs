@@ -331,10 +331,9 @@ public class Auth_Controller : MonoBehaviour
                 });
                 break;
             case "room_info":
-                //rc_info.position = new List<RC_Info_Value>();
                 RestClient.Get<RC_Info>(database_url + "/room_info.json").Then(response => {
-                    for (int i = 0; i < response.position.Count; i++) {
-                        rc_info.position.Add(response.position[i]);
+                    for (int i = 0; i < response.RC_Infos.Count; i++) {
+                        rc_info.RC_Infos.Add(response.RC_Infos[i]);
                     }
                 });
                 break;

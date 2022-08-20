@@ -61,7 +61,6 @@ public class Photon_Player : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (PV.IsMine) {
             if (other.transform.tag == "Portal") {
-                //print(other.name);
                 switch (other.name.ToString()) {
                     case "house_store":
                         GameObject Send_Info = new GameObject("Send_Info");
@@ -74,6 +73,7 @@ public class Photon_Player : MonoBehaviourPunCallbacks, IPunObservable
                         info.world_position = "house_store";
 
                         info.user = AC.user;
+                        info.rc_info = AC.rc_info;
 
                         DontDestroyOnLoad(Send_Info);
                         SceneManager.LoadScene("House_Custom");
@@ -113,6 +113,7 @@ public class Photon_Player : MonoBehaviourPunCallbacks, IPunObservable
 
                         info2.user = AC.user;
                         info2.rc_info = AC.rc_info;
+                        info2.rc_db = AC.rc_db;
 
                         DontDestroyOnLoad(Send_Info2);
                         SceneManager.LoadScene("Room_Custom");

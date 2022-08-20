@@ -21,5 +21,5 @@ public class RC_Info_Value
 [Serializable]
 public class RC_Info
 {
-    public List<RC_Info_Value> position;
+    public List<RC_Info_Value> RC_Infos;
 }
