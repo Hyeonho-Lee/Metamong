@@ -6,6 +6,8 @@ using Proyecto26;
 using System;
 using FullSerializer;
 using UnityEngine.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 public class Auth_Controller : MonoBehaviour
 { 
@@ -30,6 +32,13 @@ public class Auth_Controller : MonoBehaviour
     public RC_User rc_user = new RC_User();
     public RC_DB rc_db = new RC_DB();
     public RC_Info rc_info = new RC_Info();
+    public House house = new House();
+
+    [Header("All_House Info")]
+    public List<string> h_uid = new List<string>();
+    public List<string> h_username = new List<string>();
+    public List<int> h_position_index = new List<int>();
+    public List<int> h_house_index = new List<int>();
 
     #region 회원가입
 
@@ -151,12 +160,21 @@ public class Auth_Controller : MonoBehaviour
                 cc_user.username = userName;
                 cc_user.uid = localId;
                 RestClient.Put(database_url + "/character/" + localId + ".json?auth=" + idToken, cc_user);
-                Debug.Log("아바타 업로드 완료");
                 break;
             case "room_custom":
                 rc_user.username = userName;
                 rc_user.uid = localId;
                 RestClient.Put(database_url + "/room/" + localId + ".json?auth=" + idToken, rc_user);
+                break;
+            case "house":
+                house.username = userName;
+                house.uid = localId;
+                RestClient.Put(database_url + "/house/" + localId + ".json?auth=" + idToken, house);
+                break;
+            case "user_info":
+                user.username = userName;
+                user.uid = localId;
+                RestClient.Put(database_url + "/user/" + localId + ".json?auth=" + idToken, user);
                 break;
         }
     }
@@ -337,18 +355,61 @@ public class Auth_Controller : MonoBehaviour
                     }
                 });
                 break;
+            case "house":
+                RestClient.Get<House>(database_url + "/house/" + localId + ".json?auth=" + idToken).Then(response => {
+                    house.username = response.username;
+                    house.uid = response.uid;
+                    house.is_house = response.is_house;
+                    house.position_index = response.position_index;
+                    house.house_index = response.house_index;
+                    house.house_date = response.house_date;
+                    house.house_price = response.house_price;
+                });
+                break;
+            case "all_house":
+                RestClient.Get(database_url + "/house.json").Then(response => {
+                    string json = response.Text;
+                    JObject jObject = JObject.Parse(json);
+
+                    h_uid.Clear();
+                    h_username.Clear();
+                    h_position_index.Clear();
+                    h_house_index.Clear();
+
+                    foreach (JProperty info in jObject.Properties()) {
+                        h_uid.Add(jObject[info.Name]["uid"].ToString());
+                        h_username.Add(jObject[info.Name]["username"].ToString());
+                        h_position_index.Add(int.Parse(jObject[info.Name]["position_index"].ToString()));
+                        h_house_index.Add(int.Parse(jObject[info.Name]["house_index"].ToString()));
+
+                        //position_index.Add(int.Parse(jObject[info.Name]["position_index"].ToString()));
+                        /*all_house.house_date.Add(jObject[info.Name]["house_date"].ToString());
+                        all_house.house_index.Add(int.Parse(jObject[info.Name]["house_index"].ToString()));
+                        all_house.house_price.Add(int.Parse(jObject[info.Name]["house_price"].ToString()));
+                        all_house.is_house.Add(bool.Parse(jObject[info.Name]["is_house"].ToString()));
+                        all_house.position_index.Add(int.Parse(jObject[info.Name]["position_index"].ToString()));
+                        all_house.uid.Add(jObject[info.Name]["uid"].ToString());
+                        all_house.username.Add(jObject[info.Name]["username"].ToString());*/
+                    }
+                });
+                break;
         }
     }
 
     #endregion
-    //--------------------------------------------//
+    //------------------- 유저 ---------------------//
+
+    public void Update_User_Info()
+    {
+        PostToDatabase("user_info");
+    }
 
     public void Get_User_Info()
     {
         GetToDatabase("user_info");
     }
 
-    //--------------------------------------------//
+    //----------------- 캐릭터 -------------------//
 
     public void Update_Character_Button()
     {
@@ -365,7 +426,7 @@ public class Auth_Controller : MonoBehaviour
         GetToDatabase("character_db");
     }
 
-    //--------------------------------------------//
+    //------------------- 상담소 꾸미기 --------------------//
 
     public void Update_Room_Custom()
     {
@@ -385,5 +446,22 @@ public class Auth_Controller : MonoBehaviour
     public void Get_Room_DB()
     {
         GetToDatabase("room_db");
+    }
+
+    //------------------- 부동산 -------------------//
+
+    public void Update_House()
+    {
+        PostToDatabase("house");
+    }
+
+    public void Get_House()
+    {
+        GetToDatabase("house");
+    }
+
+    public void Get_All_House()
+    {
+        GetToDatabase("all_house");
     }
 }

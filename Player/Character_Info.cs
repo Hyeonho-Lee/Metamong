@@ -69,6 +69,8 @@ public class Character_Info : MonoBehaviourPunCallbacks, IPunObservable
         ac.Get_Room_Custom();
         ac.Get_Room_DB();
         ac.Get_Room_Info();
+        ac.Get_House();
+        ac.Get_All_House();
 
         yield return new WaitForSeconds(1.0f);
 

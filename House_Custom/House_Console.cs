@@ -74,35 +74,38 @@ public class House_Console : MonoBehaviour
         string index_string = EventSystem.current.currentSelectedGameObject.name;
         int value = int.Parse(index_string);
 
-        if (0 <= value && value <= 14) {
-            Level_Label = "A";
-        }else if (15 <= value && value <= 26) {
-            Level_Label = "B";
-        }else if (27 <= value && value <= 41) {
-            Level_Label = "C";
-        }
+        if (!house_manager.is_house || house_manager.position_index - 1 == value) {
 
-        spot_index = value;
-        house_camera.pos_house = All_Position[value].localPosition + (All_Position[value].forward * 30.0f) + (-All_Position[value].right * 3.0f);
-        Vector3 look_dir = All_Position[value].localPosition - house_camera.pos_house;
+            if (0 <= value && value <= 14) {
+                Level_Label = "A";
+            } else if (15 <= value && value <= 26) {
+                Level_Label = "B";
+            } else if (27 <= value && value <= 41) {
+                Level_Label = "C";
+            }
 
-        house_camera.is_camera = true;
-        house_camera.camera_empty = house_camera.pos_house;
-        house_camera.camera_look = look_dir;
+            spot_index = value;
+            house_camera.pos_house = All_Position[value].localPosition + (All_Position[value].forward * 30.0f) + (-All_Position[value].right * 3.0f);
+            Vector3 look_dir = All_Position[value].localPosition - house_camera.pos_house;
 
-        Position_Panel.SetActive(false);
-        House_Panel.SetActive(true);
+            house_camera.is_camera = true;
+            house_camera.camera_empty = house_camera.pos_house;
+            house_camera.camera_look = look_dir;
 
-        switch (Level_Label) {
-            case "A":
-                house_manager.Create_House_Button(A_House_Prefab.Count);
-                break;
-            case "B":
-                house_manager.Create_House_Button(B_House_Prefab.Count);
-                break;
-            case "C":
-                house_manager.Create_House_Button(C_House_Prefab.Count);
-                break;
+            Position_Panel.SetActive(false);
+            House_Panel.SetActive(true);
+
+            switch (Level_Label) {
+                case "A":
+                    house_manager.Create_House_Button(A_House_Prefab.Count);
+                    break;
+                case "B":
+                    house_manager.Create_House_Button(B_House_Prefab.Count);
+                    break;
+                case "C":
+                    house_manager.Create_House_Button(C_House_Prefab.Count);
+                    break;
+            }
         }
     }
 
@@ -167,17 +170,17 @@ public class House_Console : MonoBehaviour
             }
         }
 
-        switch (Level_Label) {
-            case "A":
-                GameObject a_house = Instantiate(A_House_Prefab[value], All_Position[spot_index]);
-                break;
-            case "B":
-                GameObject b_house = Instantiate(B_House_Prefab[value], All_Position[spot_index]);
-                break;
-            case "C":
-                GameObject c_house = Instantiate(C_House_Prefab[value], All_Position[spot_index]);
-                break;
-        }
+            switch (Level_Label) {
+                case "A":
+                    GameObject a_house = Instantiate(A_House_Prefab[value], All_Position[spot_index]);
+                    break;
+                case "B":
+                    GameObject b_house = Instantiate(B_House_Prefab[value], All_Position[spot_index]);
+                    break;
+                case "C":
+                    GameObject c_house = Instantiate(C_House_Prefab[value], All_Position[spot_index]);
+                    break;
+            }
     }
 
     public void Change_Scene()
