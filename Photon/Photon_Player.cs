@@ -21,11 +21,13 @@ public class Photon_Player : MonoBehaviourPunCallbacks, IPunObservable
     private Character_Info CI;
     private TextMeshProUGUI TMP;
     private Auth_Controller AC;
+    private World_Navigation WN;
 
     private void Awake()
     {
         CM = GameObject.Find("Server_Console").GetComponent<Connect_Manager>();
         AC = GameObject.Find("World_Console").GetComponent<Auth_Controller>();
+        WN = AC.GetComponent<World_Navigation>();
 
         CI = GetComponent<Character_Info>();
         PV = GetComponent<PhotonView>();
@@ -61,66 +63,87 @@ public class Photon_Player : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (PV.IsMine) {
             if (other.transform.tag == "Portal") {
-                switch (other.name.ToString()) {
-                    case "house_store":
-                        GameObject Send_Info = new GameObject("Send_Info");
-                        Send_Info.AddComponent<Auth_Controller>();
+                if (other.name.ToString() == "house_store") {
+                    GameObject Send_Info = new GameObject("Send_Info");
+                    Send_Info.AddComponent<Auth_Controller>();
 
-                        Auth_Controller info = Send_Info.GetComponent<Auth_Controller>();
-                        info.userName = AC.userName;
-                        info.localId = AC.localId;
-                        info.idToken = AC.idToken;
-                        info.world_position = "house_store";
+                    Auth_Controller info = Send_Info.GetComponent<Auth_Controller>();
+                    info.userName = AC.userName;
+                    info.localId = AC.localId;
+                    info.idToken = AC.idToken;
+                    info.world_position = "house_store";
 
-                        info.user = AC.user;
-                        info.rc_info = AC.rc_info;
+                    info.user = AC.user;
+                    info.rc_info = AC.rc_info;
 
-                        DontDestroyOnLoad(Send_Info);
-                        SceneManager.LoadScene("House_Custom");
+                    DontDestroyOnLoad(Send_Info);
+                    SceneManager.LoadScene("House_Custom");
 
-                        PV.RPC("DestroyRPC", RpcTarget.AllBuffered);
-                        CM.OnLeftRoom();
-                        break;
-                    case "character_store":
-                        GameObject Send_Info1 = new GameObject("Send_Info");
-                        Send_Info1.AddComponent<Auth_Controller>();
+                    PV.RPC("DestroyRPC", RpcTarget.AllBuffered);
+                    CM.OnLeftRoom();
+                }
 
-                        Auth_Controller info1 = Send_Info1.GetComponent<Auth_Controller>();
-                        info1.userName = AC.userName;
-                        info1.localId = AC.localId;
-                        info1.idToken = AC.idToken;
-                        info1.world_position = "character_store";
+                if (other.name.ToString() == "character_store") {
+                    GameObject Send_Info1 = new GameObject("Send_Info");
+                    Send_Info1.AddComponent<Auth_Controller>();
 
-                        info1.user = AC.user;
-                        info1.cc_user = AC.cc_user;
-                        info1.cc_db = AC.cc_db;
+                    Auth_Controller info1 = Send_Info1.GetComponent<Auth_Controller>();
+                    info1.userName = AC.userName;
+                    info1.localId = AC.localId;
+                    info1.idToken = AC.idToken;
+                    info1.world_position = "character_store";
 
-                        DontDestroyOnLoad(Send_Info1);
-                        SceneManager.LoadScene("Character_Custom");
+                    info1.user = AC.user;
+                    info1.cc_user = AC.cc_user;
+                    info1.cc_db = AC.cc_db;
 
-                        PV.RPC("DestroyRPC", RpcTarget.AllBuffered);
-                        CM.OnLeftRoom();
-                        break;
-                    case "room_store":
-                        GameObject Send_Info2 = new GameObject("Send_Info");
-                        Send_Info2.AddComponent<Auth_Controller>();
+                    DontDestroyOnLoad(Send_Info1);
+                    SceneManager.LoadScene("Character_Custom");
 
-                        Auth_Controller info2 = Send_Info2.GetComponent<Auth_Controller>();
-                        info2.userName = AC.userName;
-                        info2.localId = AC.localId;
-                        info2.idToken = AC.idToken;
-                        info2.world_position = "room_store";
+                    PV.RPC("DestroyRPC", RpcTarget.AllBuffered);
+                    CM.OnLeftRoom();
+                }
 
-                        info2.user = AC.user;
-                        info2.rc_info = AC.rc_info;
-                        info2.rc_db = AC.rc_db;
+                if (other.name.ToString() == "room_store") {
+                    GameObject Send_Info2 = new GameObject("Send_Info");
+                    Send_Info2.AddComponent<Auth_Controller>();
 
-                        DontDestroyOnLoad(Send_Info2);
-                        SceneManager.LoadScene("Room_Custom");
+                    Auth_Controller info2 = Send_Info2.GetComponent<Auth_Controller>();
+                    info2.userName = AC.userName;
+                    info2.localId = AC.localId;
+                    info2.idToken = AC.idToken;
+                    info2.world_position = "room_store";
 
-                        PV.RPC("DestroyRPC", RpcTarget.AllBuffered);
-                        CM.OnLeftRoom();
-                        break;
+                    info2.user = AC.user;
+                    info2.rc_info = AC.rc_info;
+                    info2.rc_db = AC.rc_db;
+
+                    DontDestroyOnLoad(Send_Info2);
+                    SceneManager.LoadScene("Room_Custom");
+
+                    PV.RPC("DestroyRPC", RpcTarget.AllBuffered);
+                    CM.OnLeftRoom();
+                }
+
+                for (int i = 1; i <= 42; i++) {
+                    if (other.name.ToString() == i.ToString()) {
+
+                        for (int j = 0; j < AC.h_position_index.Count; j++) {
+                            if (AC.h_position_index[j] == i) {
+                                if (AC.h_uid[j] == AC.user.uid) {
+                                    print("내꺼");
+                                }
+                            }
+                        }
+
+                            /*for (int j = 0; j < AC.h_uid.Count; j++) {
+                                if (AC.h_uid[j] == AC.user.uid) {
+                                    print("상담사 인증됨");
+                                }
+                            }*/
+
+                            print("상담소 이동 / " + i);
+                    }
                 }
             }
         }

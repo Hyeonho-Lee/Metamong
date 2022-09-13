@@ -37,9 +37,14 @@ public class House_Console : MonoBehaviour
 
     private House_Camera house_camera;
     private House_Manager house_manager;
+    private Auth_Controller ac;
 
     private void Start()
     {
+        if (GameObject.Find("Send_Info")) {
+            ac = GameObject.Find("Send_Info").GetComponent<Auth_Controller>();
+        }
+
         house_camera = GetComponent<House_Camera>();
         house_manager = GetComponent<House_Manager>();
 
@@ -73,8 +78,18 @@ public class House_Console : MonoBehaviour
     {
         string index_string = EventSystem.current.currentSelectedGameObject.name;
         int value = int.Parse(index_string);
+        house_manager.find_house = false;
 
-        if (!house_manager.is_house || house_manager.position_index - 1 == value) {
+        //print(value);
+        //print(house_manager.position_index);
+
+        for (int i = 0; i < ac.h_position_index.Count; i++) {
+            if (ac.h_position_index[i] == value + 1) {
+                house_manager.find_house = true;
+            }
+        }
+
+        if (house_manager.position_index == value + 1 && house_manager.find_house) {
 
             if (0 <= value && value <= 14) {
                 Level_Label = "A";

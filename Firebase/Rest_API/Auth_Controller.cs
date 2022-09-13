@@ -39,6 +39,7 @@ public class Auth_Controller : MonoBehaviour
     public List<string> h_username = new List<string>();
     public List<int> h_position_index = new List<int>();
     public List<int> h_house_index = new List<int>();
+    public List<bool> h_is_house = new List<bool>();
 
     #region 회원가입
 
@@ -375,21 +376,14 @@ public class Auth_Controller : MonoBehaviour
                     h_username.Clear();
                     h_position_index.Clear();
                     h_house_index.Clear();
+                    h_is_house.Clear();
 
                     foreach (JProperty info in jObject.Properties()) {
                         h_uid.Add(jObject[info.Name]["uid"].ToString());
                         h_username.Add(jObject[info.Name]["username"].ToString());
                         h_position_index.Add(int.Parse(jObject[info.Name]["position_index"].ToString()));
                         h_house_index.Add(int.Parse(jObject[info.Name]["house_index"].ToString()));
-
-                        //position_index.Add(int.Parse(jObject[info.Name]["position_index"].ToString()));
-                        /*all_house.house_date.Add(jObject[info.Name]["house_date"].ToString());
-                        all_house.house_index.Add(int.Parse(jObject[info.Name]["house_index"].ToString()));
-                        all_house.house_price.Add(int.Parse(jObject[info.Name]["house_price"].ToString()));
-                        all_house.is_house.Add(bool.Parse(jObject[info.Name]["is_house"].ToString()));
-                        all_house.position_index.Add(int.Parse(jObject[info.Name]["position_index"].ToString()));
-                        all_house.uid.Add(jObject[info.Name]["uid"].ToString());
-                        all_house.username.Add(jObject[info.Name]["username"].ToString());*/
+                        h_is_house.Add(bool.Parse(jObject[info.Name]["is_house"].ToString()));
                     }
                 });
                 break;

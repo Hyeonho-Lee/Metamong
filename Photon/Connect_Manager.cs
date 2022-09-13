@@ -63,8 +63,8 @@ public class Connect_Manager : MonoBehaviourPunCallbacks
         }
 
         if (spawn_name == "spawn") {
-            //Spawn_Player(new Vector3(0, 0, -40.0f));
-            Spawn_Player(new Vector3(160.0f, -4.5f, 290.0f));
+            Spawn_Player(new Vector3(0, 0, -40.0f));
+            //Spawn_Player(new Vector3(160.0f, -4.5f, 290.0f));
         } else if (spawn_name == "character_store") {
             Spawn_Player(new Vector3(200.0f, -4.5f, 245.0f));
         } else if (spawn_name == "room_store") {
@@ -90,6 +90,7 @@ public class Connect_Manager : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
+        PhotonNetwork.LeaveRoom();
         PhotonNetwork.Disconnect();
     }
 

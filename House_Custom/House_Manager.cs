@@ -16,6 +16,7 @@ public class House_Manager : MonoBehaviour
     public int index_forcus;
     public int position_index;
     public bool is_house;
+    public bool find_house;
 
     public List<int> all_position_index = new List<int>();
 
@@ -145,7 +146,7 @@ public class House_Manager : MonoBehaviour
         ac.Get_House();
         ac.Get_All_House();
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1.0f);
 
         if (ac.house.uid == null) {
             ac.house.uid = ac.user.uid;
@@ -163,10 +164,6 @@ public class House_Manager : MonoBehaviour
 
     void Change_Value()
     {
-        ac.Get_User_Info();
-        ac.Get_House();
-        ac.Get_All_House();
-
         uid = ac.user.uid;
         username = ac.user.username;
         money = ac.user.money;
@@ -192,7 +189,7 @@ public class House_Manager : MonoBehaviour
         if (ac.house.house_index == 0) {
             house_index_text.text = "X";
         } else {
-            house_index_text.text = ac.house.house_index.ToString();
+            house_index_text.text = (ac.house.house_index + 1).ToString();
         }
 
         house_date_text.text = ac.house.house_date;
@@ -200,11 +197,17 @@ public class House_Manager : MonoBehaviour
 
     public void Buy_House(int index)
     {
+        find_house = false;
         index_forcus = index;
 
-        if (!ac.house.is_house) {
-            buy_panel.SetActive(true);
+        for (int i = 0; i < ac.h_position_index.Count; i++) {
+            if (ac.h_position_index[i] == index) {
+                find_house = true;
+            }
+        }
 
+        if (!is_house && !find_house) {
+            buy_panel.SetActive(true);
             buy_text.text = index.ToString() + "번 위치 건물을 구매하시겠습니까?\n가격: 1000G";
         }
     }
@@ -242,7 +245,6 @@ public class House_Manager : MonoBehaviour
     {
         index_forcus = index;
         buy2_panel.SetActive(true);
-
         buy2_text.text = index.ToString() + "번 외형을 구매하시겠습니까?\n가격: 1000G";
     }
 
@@ -251,7 +253,10 @@ public class House_Manager : MonoBehaviour
         money -= 1000;
 
         ac.user.money = money;
-        ac.house.house_index = index_forcus;
+        ac.house.uid = ac.user.uid;
+        ac.house.username = ac.user.username;
+        ac.house.is_house = true;
+        ac.house.house_index = index_forcus - 1;
 
         ac.Update_User_Info();
         ac.Update_House();
