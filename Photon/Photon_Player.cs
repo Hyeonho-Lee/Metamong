@@ -62,6 +62,7 @@ public class Photon_Player : MonoBehaviourPunCallbacks, IPunObservable
     private void OnTriggerEnter(Collider other)
     {
         if (PV.IsMine) {
+            // 옷,가구,상담소 포탈
             if (other.transform.tag == "Portal") {
                 if (other.name.ToString() == "house_store") {
                     GameObject Send_Info = new GameObject("Send_Info");
@@ -124,10 +125,14 @@ public class Photon_Player : MonoBehaviourPunCallbacks, IPunObservable
                     PV.RPC("DestroyRPC", RpcTarget.AllBuffered);
                     CM.OnLeftRoom();
                 }
+            }
 
+            // 발판 밟을시 일어나는일
+            if (other.transform.tag == "World_Portal") {
                 for (int i = 1; i <= 42; i++) {
                     if (other.name.ToString() == i.ToString()) {
 
+                        // 내가 밟은 포탈이 소유중일때
                         for (int j = 0; j < AC.h_position_index.Count; j++) {
                             if (AC.h_position_index[j] == i) {
                                 if (AC.h_uid[j] == AC.user.uid) {
@@ -136,13 +141,14 @@ public class Photon_Player : MonoBehaviourPunCallbacks, IPunObservable
                             }
                         }
 
-                            /*for (int j = 0; j < AC.h_uid.Count; j++) {
-                                if (AC.h_uid[j] == AC.user.uid) {
-                                    print("상담사 인증됨");
-                                }
-                            }*/
+                        // 발판 밟을시 일어나는일
+                        // 해야할거: 발판을 밟을시 포톤 상담소씬(Room_World)로 이동
+                        // 포톤방을 새로 생성하고 들어가는 파트까지만
+                        // 캐릭터 생성이 되더라도 다른거 참조 해야하니까
+                        // 방을 들어만 가게끔하고 오브젝트 생성은 나중에 작업예정
+                        // 버튼 하나 만들어서 다시 메인 월드로 포톤 방이동이 되도록
 
-                            print("상담소 이동 / " + i);
+                        print("상담소 이동 / " + i);
                     }
                 }
             }
