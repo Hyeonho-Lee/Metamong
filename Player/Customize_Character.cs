@@ -85,12 +85,38 @@ public class Customize_Character : MonoBehaviourPunCallbacks, IPunObservable
     private void Start()
     {
         Check_Module();
+
+        if (PV.IsMine) {
+            StartCoroutine(C_All(1.0f));
+        }
     }
 
     private void Update()
     {
-        if (PV.IsMine) {
+        /*if (PV.IsMine) {
             PV.RPC("Change_All", RpcTarget.AllBuffered);
+        }*/
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        if (PV.IsMine) {
+            StartCoroutine(C_All(1.0f));
+        }
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        if (PV.IsMine) {
+            StartCoroutine(C_All(1.0f));
+        }
+    }
+
+    IEnumerator C_All(float delay)
+    {
+        for (int i = 0; i < 3; i++) {
+            yield return new WaitForSeconds(delay);
+            PV.RPC("Change_All", RpcTarget.All);
         }
     }
 
@@ -402,16 +428,5 @@ public class Customize_Character : MonoBehaviourPunCallbacks, IPunObservable
             character.accessory02 = (int)stream.ReceiveNext();
             character.helmet = (int)stream.ReceiveNext();
         }
-    }
-
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        //PV.RPC("Change_All", RpcTarget.AllBuffered);
-        print(newPlayer + " ´ÔÀÌ Á¢¼ÓÇÏ¿´½À´Ï´Ù.");
-    }
-
-    public override void OnPlayerLeftRoom(Player otherPlayer)
-    {
-        print(otherPlayer + " ´ÔÀÌ ³ª°¬½À´Ï´Ù.");
     }
 }

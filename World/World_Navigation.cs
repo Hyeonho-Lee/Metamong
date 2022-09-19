@@ -119,7 +119,7 @@ public class World_Navigation : MonoBehaviourPunCallbacks
 
         yield return new WaitForSeconds(delay);
 
-        PV.RPC("Destroy_House", RpcTarget.AllBuffered);
+        PV.RPC("Destroy_House", RpcTarget.All);
 
         for (int i = 0; i < ac.h_position_index.Count; i++) {
             int j = ac.h_position_index[i] - 1;
@@ -170,7 +170,7 @@ public class World_Navigation : MonoBehaviourPunCallbacks
             if (0 <= ac.h_position_index[i] && ac.h_position_index[i] <= 14 && ac.h_is_house[i]) {
                 Vector3 portal = All_Position[ac.h_position_index[i] - 1].localPosition + (All_Position[ac.h_position_index[i] - 1].forward * 15.0f) - All_Position[ac.h_position_index[i] - 1].up * 10.0f;
                 GameObject portals = PhotonNetwork.Instantiate("cube", portal, Quaternion.identity);
-                portals.name = (i + 2).ToString();
+                portals.name = ac.h_position_index[i].ToString();
 
                 Vector3 dir = (All_Position[ac.h_position_index[i] - 1].localPosition - new Vector3(0f, 10f, 0f)) - portal;
 
@@ -181,7 +181,7 @@ public class World_Navigation : MonoBehaviourPunCallbacks
             } else if (15 <= ac.h_position_index[i] && ac.h_position_index[i] <= 26 && ac.h_is_house[i]) {
                 Vector3 portal = All_Position[ac.h_position_index[i] - 1].localPosition + (All_Position[ac.h_position_index[i] - 1].forward * 15.0f) - All_Position[ac.h_position_index[i] - 1].up * 10.0f;
                 GameObject portals = PhotonNetwork.Instantiate("cube", portal, Quaternion.identity);
-                portals.name = (i + 2).ToString();
+                portals.name = ac.h_position_index[i].ToString();
 
                 Vector3 dir = (All_Position[ac.h_position_index[i] - 1].localPosition - new Vector3(0f, 10f, 0f)) - portal;
 
@@ -192,7 +192,7 @@ public class World_Navigation : MonoBehaviourPunCallbacks
             } else if (27 <= ac.h_position_index[i] && ac.h_position_index[i] <= 42 && ac.h_is_house[i]) {
                 Vector3 portal = All_Position[ac.h_position_index[i] - 1].localPosition + (All_Position[ac.h_position_index[i] - 1].forward * 15.0f) - All_Position[ac.h_position_index[i] - 1].up * 10.0f;
                 GameObject portals = PhotonNetwork.Instantiate("cube", portal, Quaternion.identity);
-                portals.name = (i + 2).ToString();
+                portals.name = ac.h_position_index[i].ToString();
 
                 Vector3 dir = (All_Position[ac.h_position_index[i] - 1].localPosition - new Vector3(0f, 10f, 0f)) - portal;
 
@@ -215,6 +215,7 @@ public class World_Navigation : MonoBehaviourPunCallbacks
             house_parents = GameObject.FindGameObjectsWithTag("World_House");
 
             for (int i = 0; i < house_parents.Length; i++) {
+                //PhotonNetwork.Destroy(house_parents[i]);
                 Destroy(house_parents[i]);
             }
         }
@@ -223,6 +224,7 @@ public class World_Navigation : MonoBehaviourPunCallbacks
             portal_parents = GameObject.FindGameObjectsWithTag("World_Portal");
 
             for (int i = 0; i < portal_parents.Length; i++) {
+                //PhotonNetwork.Destroy(portal_parents[i]);
                 Destroy(portal_parents[i]);
             }
         }

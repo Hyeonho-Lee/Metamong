@@ -16,6 +16,7 @@ public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
     public GameObject Nickname_Text;
     public GameObject Emotional_Panel;
     public GameObject Icons;
+    public GameObject voice_onn;
 
     public Sprite[] All_Icons;
     public Image voice_on;
@@ -30,7 +31,6 @@ public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
     private Animator Chat_Ani;
     private Animator Player_Ani;
     private Player_Console PC;
-    private Player_Cursor P_Cursor;
 
     private float chat_time;
     private float chat_realtime;
@@ -50,7 +50,6 @@ public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
         ChatText = GameObject.Find("All_Chat").GetComponent<Text>();
         Chat_Ani = GameObject.Find("Chat_Panel").GetComponent<Animator>();
         PC = GameObject.Find("World_Console").GetComponent<Player_Console>();
-        P_Cursor = GameObject.Find("World_Console").GetComponent<Player_Cursor>();
         Player_Ani = GetComponent<Animator>();
 
         PV = GetComponent<PhotonView>();
@@ -162,12 +161,6 @@ public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
                 Start_Icons(PC.button_value - 1);
                 PC.button_value = 0;
             }
-
-            if (P_Cursor.is_voice) {
-                PV.RPC("VoiceIcon_on", RpcTarget.All);
-            }else {
-                PV.RPC("VoiceIcon_off", RpcTarget.All);
-            }
         }
     }
 
@@ -218,18 +211,6 @@ public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
     private void SendIcon(int value)
     {
         Icons.GetComponent<Image>().sprite = All_Icons[value];
-    }
-
-    [PunRPC]
-    private void VoiceIcon_on()
-    {
-        voice_on.enabled = true;
-    }
-
-    [PunRPC]
-    private void VoiceIcon_off()
-    {
-        voice_on.enabled = false;
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

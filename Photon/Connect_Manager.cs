@@ -24,7 +24,6 @@ public class Connect_Manager : MonoBehaviourPunCallbacks
 
     private PhotonView PV;
 
-
     private void Start()
     {
         PhotonNetwork.GameVersion = "1";
@@ -38,6 +37,11 @@ public class Connect_Manager : MonoBehaviourPunCallbacks
     private void Update()
     {
         info.text = PhotonNetwork.NetworkClientState.ToString();
+    }
+
+    public void Connect()
+    {
+        PhotonNetwork.ConnectUsingSettings();
     }
 
     public override void OnConnectedToMaster()
@@ -97,6 +101,8 @@ public class Connect_Manager : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         Destroy(Player_Object);
+        print(cause);
+        Connect();
     }
 
     //public override void OnPlayerEnteredRoom(Player newPlayer)

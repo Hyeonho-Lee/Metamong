@@ -49,12 +49,36 @@ public class Photon_Player : MonoBehaviourPunCallbacks, IPunObservable
             if (PhotonNetwork.LocalPlayer.NickName == "") {
                 PhotonNetwork.LocalPlayer.NickName = CI.userName;
             }
+
+            StartCoroutine(N_All(1.0f));
         }
     }
 
     private void Update()
     {
+        /*if (PV.IsMine) {
+            PV.RPC("SendName", RpcTarget.All);
+        }*/
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
         if (PV.IsMine) {
+            StartCoroutine(N_All(1.0f));
+        }
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        if (PV.IsMine) {
+            StartCoroutine(N_All(1.0f));
+        }
+    }
+
+    IEnumerator N_All(float delay)
+    {
+        for (int i = 0; i < 3; i++) {
+            yield return new WaitForSeconds(delay);
             PV.RPC("SendName", RpcTarget.All);
         }
     }
