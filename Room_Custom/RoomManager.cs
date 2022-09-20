@@ -8,7 +8,15 @@ using UnityEngine.EventSystems;
 
 public class RoomManager : MonoBehaviour
 {
+    public int money;
+    public string uid;
+    public string username;
+
     public GameObject item_button;
+    public GameObject buy_panel;
+    public Text buy_text;
+    public Text money_text;
+    public Text money2_text;
 
     private Customize_Room customize_room;
     private Customize_Room_Bnt cr;
@@ -38,7 +46,7 @@ public class RoomManager : MonoBehaviour
             Bntt.name = i.ToString();
             Bntt.transform.SetParent(Parents);
             Bntt.transform.localScale = new Vector3(1, 1, 1);
-            Bntt.GetComponent<Button>().onClick.AddListener(() => customize_room.Change_Module());
+            Bntt.GetComponent<Button>().onClick.AddListener(() => customize_room.Change_Module(-1));
 
             GameObject item_name = Bntt.transform.Find("ItemName").gameObject;
             Text bntt_name = item_name.GetComponent<Text>();
@@ -48,6 +56,10 @@ public class RoomManager : MonoBehaviour
 
             GameObject bntImage = Bntt.transform.Find("ItemImage").gameObject;
             Image bnttImage = bntImage.GetComponent<Image>();
+
+            GameObject buy_button = Bntt.transform.Find("Buy_button").gameObject;
+            buy_button.GetComponent<Button>().onClick.AddListener(() => Buy_Room(int.Parse(Bntt.name)));
+            buy_button.GetComponent<Button>().onClick.AddListener(() => customize_room.Change_Module(int.Parse(Bntt.name)));
 
             switch (type) {
                 case "벽지1":
@@ -122,6 +134,7 @@ public class RoomManager : MonoBehaviour
 
     IEnumerator Load_RoomCustom()
     {
+        ac.Get_User_Info();
         ac.Get_Room_Custom();
 
         yield return new WaitForSeconds(0.5f);
@@ -141,5 +154,34 @@ public class RoomManager : MonoBehaviour
         customize_room.room.table_accessory01 = ac.rc_user.table_accessory01;
 
         customize_room.Check_Module();
+        Change_Value();
+    }
+
+    public void Buy_Room(int index)
+    {
+        buy_panel.SetActive(true);
+        buy_text.text = index.ToString() + "번 외형을 변경하시겠습니까?";
+    }
+
+    public void Result_Room()
+    {
+        money -= 50;
+
+        ac.user.money = money;
+
+        ac.Update_User_Info();
+        ac.Update_Room_Custom();
+
+        Change_Value();
+    }
+
+    void Change_Value()
+    {
+        uid = ac.user.uid;
+        username = ac.user.username;
+        money = ac.user.money;
+
+        money_text.text = money.ToString() + "G";
+        money2_text.text = money.ToString() + "G";
     }
 }

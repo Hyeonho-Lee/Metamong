@@ -80,9 +80,16 @@ public class Customize_Room : MonoBehaviour
         Check_Module();
     }
 
-    public void Change_Module()
+    public void Change_Module(int index)
     {
-        string index_string = EventSystem.current.currentSelectedGameObject.name;
+        string index_string;
+
+        if (index >= 0) {
+            index_string = index.ToString();
+        } else {
+            index_string = EventSystem.current.currentSelectedGameObject.name;
+        }
+
         int index_int = int.Parse(index_string);
 
         switch(RC.label.text) {

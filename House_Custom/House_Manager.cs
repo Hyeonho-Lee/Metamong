@@ -21,6 +21,7 @@ public class House_Manager : MonoBehaviour
     public List<int> all_position_index = new List<int>();
 
     public GameObject item_button;
+    public GameObject item_button2;
     public GameObject buy_panel;
     public GameObject buy2_panel;
     public Text buy_text;
@@ -105,11 +106,11 @@ public class House_Manager : MonoBehaviour
         }
 
         for (int i = 0; i < count; i++) {
-            GameObject Bntt = Instantiate(item_button, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+            GameObject Bntt = Instantiate(item_button2, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
             Bntt.name = i.ToString();
             Bntt.transform.SetParent(Parents);
             Bntt.transform.localScale = new Vector3(1, 1, 1);
-            Bntt.GetComponent<Button>().onClick.AddListener(() => house_console.Change_House());
+            Bntt.GetComponent<Button>().onClick.AddListener(() => house_console.Change_House(-1));
 
             GameObject item_name = Bntt.transform.Find("ItemName").gameObject;
             Text bntt_name = item_name.GetComponent<Text>();
@@ -122,6 +123,7 @@ public class House_Manager : MonoBehaviour
 
             GameObject buy_button = Bntt.transform.Find("Buy_button").gameObject;
             buy_button.GetComponent<Button>().onClick.AddListener(() => Buy2_House(int.Parse(Bntt.name) + 1));
+            buy_button.GetComponent<Button>().onClick.AddListener(() => house_console.Change_House(int.Parse(Bntt.name) + 1));
 
             switch (house_console.Level_Label) {
                 case "A":
@@ -245,7 +247,7 @@ public class House_Manager : MonoBehaviour
     {
         index_forcus = index;
         buy2_panel.SetActive(true);
-        buy2_text.text = index.ToString() + "번 외형을 구매하시겠습니까?\n가격: 1000G";
+        buy2_text.text = index.ToString() + "번 외형을 변경하시겠습니까?\n가격: 1000G";
     }
 
     public void Result2_House()

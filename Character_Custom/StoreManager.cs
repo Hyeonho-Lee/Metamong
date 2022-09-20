@@ -8,9 +8,15 @@ using UnityEngine.EventSystems;
 
 public class StoreManager : MonoBehaviour
 {
+    public int money;
     public string input_value;
+    public string uid;
+    public string username;
 
     public GameObject item_button;
+    public GameObject buy_panel;
+    public Text buy_text;
+    public Text money_text;
 
     private Custom_Character_Offline cc;
     private Customize_StoreBnt cs;
@@ -91,7 +97,7 @@ public class StoreManager : MonoBehaviour
             Bntt.name = i.ToString();
             Bntt.transform.SetParent(Parents);
             Bntt.transform.localScale = new Vector3(1, 1, 1);
-            Bntt.GetComponent<Button>().onClick.AddListener(() => Change_Module());
+            Bntt.GetComponent<Button>().onClick.AddListener(() => Change_Module(-1));
 
             GameObject item_name = Bntt.transform.Find("ItemName").gameObject;
             Text bntt_name = item_name.GetComponent<Text>();
@@ -101,6 +107,10 @@ public class StoreManager : MonoBehaviour
 
             GameObject bntImage = Bntt.transform.Find("ItemImage").gameObject;
             Image bnttImage = bntImage.GetComponent<Image>();
+
+            GameObject buy_button = Bntt.transform.Find("Buy_button").gameObject;
+            buy_button.GetComponent<Button>().onClick.AddListener(() => Buy_Character(int.Parse(Bntt.name)));
+            buy_button.GetComponent<Button>().onClick.AddListener(() => Change_Module(int.Parse(Bntt.name)));
 
             if (input_value != null) {
                 switch (input_value) {
@@ -174,42 +184,23 @@ public class StoreManager : MonoBehaviour
         }
     }
 
-    public void Check_Module()
+    public void Buy_Character(int index)
     {
-        //character_moudle.Reset_Input();
-
-        string[] value = new string[] { "Accessory01", "Accessory02", "Beard", "Eye", "Eyebrow", 
-            "Gloves", "Hair", "Head", "Helmet", "Mouth", "Pants", "Shoes", "Top" };
-
-        /*for (int i = 0; i < value.Length; i++)
-        {
-            DirectoryInfo di = new DirectoryInfo(Application.dataPath + "/Prefab/Character/" + value[i]);
-            FileInfo[] file = di.GetFiles("*.prefab");
-
-            for (int j = 0; j < file.Length; j++)
-            {
-                string path = "Assets\\Prefab\\Character\\" + value[i] + "\\" + file[j].Name;
-                GameObject obj = (GameObject)AssetDatabase.LoadAssetAtPath(path, typeof(GameObject));
-
-                switch (value[i])
-                {
-                    case "Head":
-                        character_moudle.head.Add(obj);
-                        break;
-                    case "Body":
-                        character_moudle.body.Add(obj);
-                        break;
-                    case "Top":
-                        character_moudle.top.Add(obj);
-                        break;
-                    case "Pants":
-                        character_moudle.pants.Add(obj);
-                        break;
-                }
-            }
-        }*/
+        buy_panel.SetActive(true);
+        buy_text.text = index.ToString() + "번 외형을 변경하시겠습니까?";
     }
 
+    public void Result_Character()
+    {
+        money -= 10;
+
+        ac.user.money = money;
+
+        ac.Update_User_Info();
+        ac.Update_Character_Button();
+
+        Change_Value();
+    }
 
     public void Delete_Button()
     {
@@ -225,7 +216,7 @@ public class StoreManager : MonoBehaviour
     #endregion
 
     #region 모듈 바꾸기
-    public void Change_Module()
+    public void Change_Module(int index)
     {
         Transform Eyebrow_Part = GameObject.Find("Eyebrow_Part").transform;
         Transform Eye_Part = GameObject.Find("Eye_Part").transform;
@@ -242,7 +233,13 @@ public class StoreManager : MonoBehaviour
         Transform Helmet_Part = GameObject.Find("Helmet_Part").transform;
         Transform Weapon_Part = GameObject.Find("Weapon_Part").transform;
 
-        string index_string = EventSystem.current.currentSelectedGameObject.name;
+        string index_string;
+
+        if (index >= 0) {
+            index_string = index.ToString();
+        }else {
+            index_string = EventSystem.current.currentSelectedGameObject.name;
+        }
 
         if (input_value != null)
         {
@@ -362,10 +359,12 @@ public class StoreManager : MonoBehaviour
             }
         }
     }
+
     #endregion
 
     IEnumerator Load_Characters()
     {
+        ac.Get_User_Info();
         ac.Get_Character_Button();
 
         yield return new WaitForSeconds(1.0f);
@@ -385,5 +384,15 @@ public class StoreManager : MonoBehaviour
         cc.character.helmet = ac.cc_user.helmet;
 
         cc.Change_All();
+        Change_Value();
+    }
+
+    void Change_Value()
+    {
+        uid = ac.user.uid;
+        username = ac.user.username;
+        money = ac.user.money;
+
+        money_text.text = money.ToString() + "G";
     }
 }

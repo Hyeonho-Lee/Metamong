@@ -173,10 +173,16 @@ public class House_Console : MonoBehaviour
         C_House_Sprite = c_house.OfType<Sprite>().ToList();
     }
 
-    public void Change_House()
+    public void Change_House(int index)
     {
-        GameObject Parent = EventSystem.current.currentSelectedGameObject;
-        string index_string = Parent.name;
+        string index_string;
+
+        if (index >= 0) {
+            index_string = index.ToString();
+        } else {
+            index_string = EventSystem.current.currentSelectedGameObject.name;
+        }
+
         int value = int.Parse(index_string);
 
         if (All_Position[spot_index].transform.childCount != 0) {
