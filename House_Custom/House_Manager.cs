@@ -123,7 +123,7 @@ public class House_Manager : MonoBehaviour
 
             GameObject buy_button = Bntt.transform.Find("Buy_button").gameObject;
             buy_button.GetComponent<Button>().onClick.AddListener(() => Buy2_House(int.Parse(Bntt.name) + 1));
-            buy_button.GetComponent<Button>().onClick.AddListener(() => house_console.Change_House(int.Parse(Bntt.name) + 1));
+            buy_button.GetComponent<Button>().onClick.AddListener(() => house_console.Change_House(int.Parse(Bntt.name)));
 
             switch (house_console.Level_Label) {
                 case "A":

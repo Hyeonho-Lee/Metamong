@@ -137,7 +137,7 @@ public class RoomManager : MonoBehaviour
         ac.Get_User_Info();
         ac.Get_Room_Custom();
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1.5f);
 
         customize_room.room.wall01 = ac.rc_user.wall01;
         customize_room.room.wall_accessory01 = ac.rc_user.wall_accessory01;

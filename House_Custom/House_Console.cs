@@ -59,7 +59,7 @@ public class House_Console : MonoBehaviour
 
         House_Position = GameObject.Find("House_Position");
 
-        for (int j = 0; j < House_Position.transform.GetChildCount(); j++) {
+        for (int j = 0; j < House_Position.transform.childCount; j++) {
             Transform Position = House_Position.transform.GetChild(j);
 
             for (int i = 0; i < Position.childCount; i++) {

@@ -29,7 +29,13 @@ public class Player_SoundSet : MonoBehaviourPunCallbacks, IPunObservable
         PV = GetComponent<PhotonView>();
         audioSource = GetComponent<AudioSource>();
         PVN = GameObject.Find("Voice_Manager").GetComponent<PhotonVoiceNetwork>();
-        PC = GameObject.Find("World_Console").GetComponent<Player_Cursor>();
+
+        if (SceneManager.GetActiveScene().name == "Room_World") {
+            PC = GameObject.Find("Room_Console").GetComponent<Player_Cursor>();
+        } else {
+            PC = GameObject.Find("World_Console").GetComponent<Player_Cursor>();
+        }
+
         P_Chat = GetComponent<Player_Chat>();
 
         if (PV.IsMine) {

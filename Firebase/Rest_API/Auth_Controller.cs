@@ -24,6 +24,7 @@ public class Auth_Controller : MonoBehaviour
     public string localId;
     public string error_code;
     public string world_position;
+    public string room_index;
 
     [Header("Data Info")]
     public User user = new User();

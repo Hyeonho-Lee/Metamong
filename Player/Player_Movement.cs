@@ -57,7 +57,7 @@ public class Player_Movement : MonoBehaviourPunCallbacks, IPunObservable
         Scene scene = SceneManager.GetActiveScene();
 
         if (scene.name == "Main_World") is_room = false;
-        if (scene.name == "Room_Custom") is_room = true;
+        if (scene.name == "Room_World") is_room = true;
     }
 
     void Update()

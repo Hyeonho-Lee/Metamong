@@ -7,7 +7,7 @@ using Photon.Realtime;
 using TMPro;
 using UnityEngine.SceneManagement;
 
-public class Photon_Player : MonoBehaviourPunCallbacks, IPunObservable
+public class Photon_Player : MonoBehaviourPunCallbacks, IPunObservable 
 {
     public string PlayerNickName;
 
@@ -18,15 +18,25 @@ public class Photon_Player : MonoBehaviourPunCallbacks, IPunObservable
 
     private PhotonView PV;
     private Connect_Manager CM;
+    private Connect_Manager2 CM2;
     private Character_Info CI;
     private TextMeshProUGUI TMP;
     private Auth_Controller AC;
     private World_Navigation WN;
+    private Player_Console PC;
 
     private void Awake()
     {
-        CM = GameObject.Find("Server_Console").GetComponent<Connect_Manager>();
-        AC = GameObject.Find("World_Console").GetComponent<Auth_Controller>();
+        if (SceneManager.GetActiveScene().name == "Room_World") {
+            CM2 = GameObject.Find("Server_Console").GetComponent<Connect_Manager2>();
+            AC = GameObject.Find("Room_Console").GetComponent<Auth_Controller>();
+            PC = GameObject.Find("Room_Console").GetComponent<Player_Console>();
+        } else {
+            CM = GameObject.Find("Server_Console").GetComponent<Connect_Manager>();
+            AC = GameObject.Find("World_Console").GetComponent<Auth_Controller>();
+            PC = GameObject.Find("World_Console").GetComponent<Player_Console>();
+        }
+
         WN = AC.GetComponent<World_Navigation>();
 
         CI = GetComponent<Character_Info>();
@@ -38,9 +48,13 @@ public class Photon_Player : MonoBehaviourPunCallbacks, IPunObservable
     private void Start()
     {
         if (PV.IsMine) {
-            player_camera = Instantiate(CM.follow_camera, GameObject.Find("All_Camera").transform);
-            player_camera.transform.GetChild(1).GetComponent<Player_Camera>().Player_Transform = this.transform;
-            //camera.transform.parent = this.transform.parent;
+            if (SceneManager.GetActiveScene().name == "Room_World") {
+                player_camera = null;
+            } else {
+                player_camera = Instantiate(CM.follow_camera, GameObject.Find("All_Camera").transform);
+                player_camera.transform.GetChild(1).GetComponent<Player_Camera>().Player_Transform = this.transform;
+                //camera.transform.parent = this.transform.parent;
+            }
 
             PhotonNetwork.LocalPlayer.NickName = CI.userName;
             PlayerNickName = CI.userName;
@@ -52,13 +66,6 @@ public class Photon_Player : MonoBehaviourPunCallbacks, IPunObservable
 
             StartCoroutine(N_All(1.0f));
         }
-    }
-
-    private void Update()
-    {
-        /*if (PV.IsMine) {
-            PV.RPC("SendName", RpcTarget.All);
-        }*/
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -149,30 +156,93 @@ public class Photon_Player : MonoBehaviourPunCallbacks, IPunObservable
                     PV.RPC("DestroyRPC", RpcTarget.AllBuffered);
                     CM.OnLeftRoom();
                 }
+
+                if (other.name.ToString() == "world_portal") {
+                    Room_Managers RM = GameObject.Find("Room_Console").GetComponent<Room_Managers>();
+                    RM.LeftRoom();
+                }
             }
 
-            // 발판 밟을시 일어나는일
             if (other.transform.tag == "World_Portal") {
                 for (int i = 1; i <= 42; i++) {
                     if (other.name.ToString() == i.ToString()) {
+
+                        int stack = 0;
 
                         // 내가 밟은 포탈이 소유중일때
                         for (int j = 0; j < AC.h_position_index.Count; j++) {
                             if (AC.h_position_index[j] == i) {
                                 if (AC.h_uid[j] == AC.user.uid) {
-                                    print("내꺼");
+                                    GameObject Send_Info = new GameObject("Send_Info");
+                                    Send_Info.AddComponent<Auth_Controller>();
+
+                                    Auth_Controller info = Send_Info.GetComponent<Auth_Controller>();
+                                    info.userName = AC.userName;
+                                    info.localId = AC.localId;
+                                    info.idToken = AC.idToken;
+                                    info.world_position = "room_world";
+                                    info.room_index = i.ToString();
+                                    CM.spawn_name = "room_world";
+
+                                    info.user = AC.user;
+                                    info.cc_user = AC.cc_user;
+                                    info.cc_db = AC.cc_db;
+
+                                    GameObject Send_Spawn = Instantiate(Send_Info); ;
+                                    Send_Spawn.name = "Title_Console";
+
+                                    DontDestroyOnLoad(Send_Info);
+                                    DontDestroyOnLoad(Send_Spawn);
+
+                                    CM.spawn_name = "room_world";
+
+                                    PV.RPC("DestroyRPC", RpcTarget.AllBuffered);
+                                    CM.OnLeftRoom();
                                 }
+                            } else {
+                                stack++;
                             }
                         }
 
-                        // 발판 밟을시 일어나는일
-                        // 해야할거: 발판을 밟을시 포톤 상담소씬(Room_World)로 이동
-                        // 포톤방을 새로 생성하고 들어가는 파트까지만
-                        // 캐릭터 생성이 되더라도 다른거 참조 해야하니까
-                        // 방을 들어만 가게끔하고 오브젝트 생성은 나중에 작업예정
-                        // 버튼 하나 만들어서 다시 메인 월드로 포톤 방이동이 되도록
+                        if (AC.h_position_index.Count != stack) {
+                            //print("누군가 집");
 
-                        print("상담소 이동 / " + i);
+                            for (int j = 0; j < PC.all_room.Count; j++) {
+                                if (i.ToString()+"room" == PC.all_room[j]) {
+                                    print(i + "번쨰 방이 존재 합니다");
+
+                                    GameObject Send_Info2 = new GameObject("Send_Info");
+                                    Send_Info2.AddComponent<Auth_Controller>();
+
+                                    Auth_Controller info2 = Send_Info2.GetComponent<Auth_Controller>();
+                                    info2.userName = AC.userName;
+                                    info2.localId = AC.localId;
+                                    info2.idToken = AC.idToken;
+                                    info2.world_position = "room_world";
+                                    info2.room_index = i.ToString();
+                                    CM.spawn_name = "room_world";
+
+                                    info2.user = AC.user;
+                                    info2.cc_user = AC.cc_user;
+                                    info2.cc_db = AC.cc_db;
+
+                                    GameObject Send_Spawn2 = Instantiate(Send_Info2); ;
+                                    Send_Spawn2.name = "Title_Console";
+
+                                    DontDestroyOnLoad(Send_Info2);
+                                    DontDestroyOnLoad(Send_Spawn2);
+
+                                    PV.RPC("DestroyRPC", RpcTarget.AllBuffered);
+                                    CM.OnLeftRoom();
+                                }
+                            }
+                        } else {
+                            //print("빈 집");
+                        }
+
+                        //print(stack);
+                        //print("상담소 이동 / " + i);
+                        stack = 0;
                     }
                 }
             }

@@ -72,8 +72,6 @@ public class Customize_Room : MonoBehaviour
 
         if (GameObject.Find("Send_Info")) {
             ac = GameObject.Find("Send_Info").GetComponent<Auth_Controller>();
-        } else {
-            //print("오프라인 입니다.");
         }
 
         Check_Prefab();

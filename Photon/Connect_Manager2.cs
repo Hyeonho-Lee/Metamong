@@ -6,23 +6,23 @@ using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class Connect_Manager : MonoBehaviourPunCallbacks
+public class Connect_Manager2 : MonoBehaviourPunCallbacks
 {
     public string spawn_name;
+    public string room_index;
 
     private bool is_spawn;
+    private bool is_host;
 
     public Text info;
-
-    public GameObject follow_camera;
-    public GameObject loading_camera;
     public GameObject player;
+    public InputField ChatInput;
 
     private GameObject Player_Object;
 
-    public InputField ChatInput;
-
     private PhotonView PV;
+    private Auth_Controller AC;
+    private Room_Managers RM;
 
     private void Start()
     {
@@ -30,6 +30,7 @@ public class Connect_Manager : MonoBehaviourPunCallbacks
         PhotonNetwork.ConnectUsingSettings();
 
         PV = GetComponent<PhotonView>();
+        RM = GameObject.Find("Room_Console").GetComponent<Room_Managers>();
 
         is_spawn = false;
     }
@@ -51,30 +52,35 @@ public class Connect_Manager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
-        PhotonNetwork.JoinRoom("main_room");
+        if (!is_host && !is_spawn && GameObject.Find("Send_Info") != null) {
+            GameObject empty = GameObject.Find("Send_Info");
+            AC = empty.gameObject.GetComponent<Auth_Controller>();
+            spawn_name = AC.world_position;
+            room_index = AC.room_index;
+            Destroy(empty);
+            is_spawn = true;
+            is_host = true;
+            StartCoroutine(RM.Load_RoomCustom());
+            print("호스트 들어옴");
+        }
+
+        if (is_host && !is_spawn && GameObject.Find("Send_Info") != null) {
+            GameObject empty = GameObject.Find("Send_Info");
+            AC = empty.gameObject.GetComponent<Auth_Controller>();
+            spawn_name = AC.world_position;
+            room_index = AC.room_index;
+            Destroy(empty);
+            is_spawn = true;
+            print("유저 들어옴");
+        }
+
+        PhotonNetwork.JoinRoom(room_index + "room");
     }
 
     public override void OnJoinedRoom()
     {
-        spawn_name = "spawn";
-
-        if (!is_spawn && GameObject.Find("Send_Spawn") != null) {
-            GameObject empty = GameObject.Find("Send_Spawn");
-            Auth_Controller AC = empty.gameObject.GetComponent<Auth_Controller>();
-            spawn_name = AC.world_position;
-            Destroy(empty);
-            is_spawn = true;
-        }
-
-        if (spawn_name == "spawn") {
-            Spawn_Player(new Vector3(0, 0, -40.0f));
-            //Spawn_Player(new Vector3(160.0f, -4.5f, 290.0f));
-        } else if (spawn_name == "character_store") {
-            Spawn_Player(new Vector3(200.0f, -4.5f, 245.0f));
-        } else if (spawn_name == "room_store") {
-            Spawn_Player(new Vector3(160.0f, -4.5f, 290.0f));
-        } else if (spawn_name == "house_store") {
-            Spawn_Player(new Vector3(97.0f, -4.5f, 230.0f));
+        if (spawn_name == "room_world") {
+            Spawn_Player(new Vector3(-2.3f, 0, -3.8f));
         }
     }
 
@@ -83,24 +89,19 @@ public class Connect_Manager : MonoBehaviourPunCallbacks
         Player_Object = PhotonNetwork.Instantiate(player.name, spawn, Quaternion.identity);
         is_spawn = true;
         spawn_name = "";
-        loading_camera.SetActive(false);
         ChatInput.text = "";
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
-        PhotonNetwork.CreateRoom("main_room", new RoomOptions { MaxPlayers = 50 });
+        CreateRoom(room_index);
     }
 
     public override void OnLeftRoom()
     {
+        Destroy(Player_Object);
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.Disconnect();
-
-        if (spawn_name == "room_world") {
-            SceneManager.LoadScene("Room_World");
-            spawn_name = "";
-        }
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -110,9 +111,9 @@ public class Connect_Manager : MonoBehaviourPunCallbacks
         Connect();
     }
 
-    //public override void OnPlayerEnteredRoom(Player newPlayer)
-    //{
-    //print("새로운 플레이어 접속");
-    //}
-    //onplayerenterdroom player타입에 아무거나 
+    public void CreateRoom(string name)
+    {
+        print(name + "room");
+        PhotonNetwork.CreateRoom(name + "room", new RoomOptions { MaxPlayers = 2 });
+    }
 }

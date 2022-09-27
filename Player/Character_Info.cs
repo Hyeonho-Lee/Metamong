@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.SceneManagement;
 
 public class Character_Info : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -38,8 +39,14 @@ public class Character_Info : MonoBehaviourPunCallbacks, IPunObservable
 
             if (userName != null && localId != null && cc == null) {
                 cc = GetComponent<Customize_Character>();
-                ac = GameObject.Find("World_Console").GetComponent<Auth_Controller>();
-                pc = GameObject.Find("World_Console").GetComponent<Player_Console>();
+
+                if (SceneManager.GetActiveScene().name == "Room_World") {
+                    ac = GameObject.Find("Room_Console").GetComponent<Auth_Controller>();
+                    pc = GameObject.Find("Room_Console").GetComponent<Player_Console>();
+                } else {
+                    ac = GameObject.Find("World_Console").GetComponent<Auth_Controller>();
+                    pc = GameObject.Find("World_Console").GetComponent<Player_Console>();
+                }
             }
 
             if (userName != null && localId != null && cc != null && !is_load) {

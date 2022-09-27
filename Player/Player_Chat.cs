@@ -49,7 +49,7 @@ public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
         ChatInputField = GameObject.Find("Chat_InputField").GetComponent<InputField>();
         ChatText = GameObject.Find("All_Chat").GetComponent<Text>();
         Chat_Ani = GameObject.Find("Chat_Panel").GetComponent<Animator>();
-        PC = GameObject.Find("World_Console").GetComponent<Player_Console>();
+
         Player_Ani = GetComponent<Animator>();
 
         PV = GetComponent<PhotonView>();
@@ -57,18 +57,16 @@ public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
         PP = GetComponent<Photon_Player>();
         PM = GetComponent<Player_Movement>();
         TMP = UpdateText.GetComponent<TextMeshProUGUI>();
-
-        Scene scene = SceneManager.GetActiveScene();
-
-        if (scene.name != "Main_World") {
-            BubbleSpeechObject.SetActive(false);
-            Nickname_Text.SetActive(false);
-            Emotional_Panel.SetActive(false);
-        }
     }
 
     private void Start()
     {
+        if (SceneManager.GetActiveScene().name == "Room_World") {
+            PC = GameObject.Find("Room_Console").GetComponent<Player_Console>();
+        } else {
+            PC = GameObject.Find("World_Console").GetComponent<Player_Console>();
+        }
+
         emotion_value = 0;
         chat_time = 5.0f;
         chat_realtime = chat_time;
