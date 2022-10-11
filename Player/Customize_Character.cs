@@ -136,6 +136,7 @@ public class Customize_Character : MonoBehaviourPunCallbacks, IPunObservable
         Transform Beard_Part = Head.transform.GetChild(7);
         Transform Helmet_Part = Head.transform.GetChild(8);
         Transform Accessort01_Part = Head.transform.GetChild(9);
+        Transform Mouth_Part = Head.transform.GetChild(4).transform.GetChild(0);
 
         for (int j = 0; j < Head_Part.childCount; j++) {
             character_moudle.head.Add(Head_Part.GetChild(j).gameObject);
@@ -167,6 +168,10 @@ public class Customize_Character : MonoBehaviourPunCallbacks, IPunObservable
 
         for (int j = 0; j < Accessory02_Part.childCount; j++) {
             character_moudle.accessory02.Add(Accessory02_Part.GetChild(j).gameObject);
+        }
+
+        for (int j = 0; j < Mouth_Part.childCount; j++) {
+            character_moudle.mouth.Add(Mouth_Part.GetChild(j).gameObject);
         }
 
         //--------------------------//

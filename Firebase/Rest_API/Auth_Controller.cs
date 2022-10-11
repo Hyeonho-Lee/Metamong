@@ -178,6 +178,11 @@ public class Auth_Controller : MonoBehaviour
                 user.uid = localId;
                 RestClient.Put(database_url + "/user/" + localId + ".json?auth=" + idToken, user);
                 break;
+            case "room_info":
+                user.username = userName;
+                user.uid = localId;
+                RestClient.Put(database_url + "/room_info.json?auth=" + idToken, rc_info);
+                break;
         }
     }
 
@@ -433,11 +438,6 @@ public class Auth_Controller : MonoBehaviour
         GetToDatabase("room_custom");
     }
 
-    public void Get_Room_Info()
-    {
-        GetToDatabase("room_info");
-    }
-
     public void Get_Room_DB()
     {
         GetToDatabase("room_db");
@@ -458,5 +458,17 @@ public class Auth_Controller : MonoBehaviour
     public void Get_All_House()
     {
         GetToDatabase("all_house");
+    }
+
+    //------------------- 상담소 꾸미기 --------------------//
+
+    public void Update_Room_Info()
+    {
+        PostToDatabase("room_info");
+    }
+
+    public void Get_Room_Info()
+    {
+        GetToDatabase("room_info");
     }
 }

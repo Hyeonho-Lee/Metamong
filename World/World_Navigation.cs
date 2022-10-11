@@ -69,14 +69,14 @@ public class World_Navigation : MonoBehaviourPunCallbacks
         } else {
             if (Navi_Effect_On != null) {
                 Destroy(Navi_Effect_On);
-                button.gameObject.SetActive(true);
             }
         }
     }
 
-    public void Click_Button()
+    public void Click_Button(int value)
     {
-        button.gameObject.SetActive(false);
+        is_navi = true;
+        navi_realtime = 10.0f;
 
         Vector3 Spawn_Position = All_Position[value].transform.position;
 

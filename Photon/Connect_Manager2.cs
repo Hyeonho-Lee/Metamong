@@ -60,8 +60,9 @@ public class Connect_Manager2 : MonoBehaviourPunCallbacks
             Destroy(empty);
             is_spawn = true;
             is_host = true;
-            StartCoroutine(RM.Load_RoomCustom());
-            print("호스트 들어옴");
+
+            //StartCoroutine(RM.Load_RoomCustom());
+            //print("호스트 들어옴");
         }
 
         if (is_host && !is_spawn && GameObject.Find("Send_Info") != null) {
@@ -71,10 +72,32 @@ public class Connect_Manager2 : MonoBehaviourPunCallbacks
             room_index = AC.room_index;
             Destroy(empty);
             is_spawn = true;
-            print("유저 들어옴");
+
+            //print("유저 들어옴");
         }
 
         PhotonNetwork.JoinRoom(room_index + "room");
+        //StartCoroutine(Check_Host(2.0f));
+    }
+
+    IEnumerator Check_Host(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        Scene scene = SceneManager.GetActiveScene();
+
+        if (scene.name == "Room_World") {
+            for (int i = 0; i < AC.h_position_index.Count; i++) {
+                if (int.Parse(room_index) == AC.h_position_index[i]) {
+                    if (AC.h_uid[i] == AC.localId) {
+                        //StartCoroutine(RM.Load_RoomCustom());
+                        print("방 주인임");
+                    } else {
+                        print("유저임");
+                    }
+                }
+            }
+        }
     }
 
     public override void OnJoinedRoom()
@@ -115,5 +138,6 @@ public class Connect_Manager2 : MonoBehaviourPunCallbacks
     {
         print(name + "room");
         PhotonNetwork.CreateRoom(name + "room", new RoomOptions { MaxPlayers = 2 });
+        StartCoroutine(RM.Load_RoomCustom());
     }
 }

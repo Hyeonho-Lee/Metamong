@@ -5,13 +5,21 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using System;
+using TMPro;
+using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class Player_Console : MonoBehaviourPunCallbacks
 {
     public List<string> all_room = new List<string>();
+    public List<GameObject> All_Info = new List<GameObject>();
 
     public GameObject[] all_player;
     public GameObject[] All_Canvas;
+
+    private TextMeshProUGUI username;
+    private TextMeshProUGUI title;
+    private TextMeshProUGUI info;
 
     public Button[] Emotion_All;
     public GameObject Icon_Panel;
@@ -29,8 +37,12 @@ public class Player_Console : MonoBehaviourPunCallbacks
     private bool is_update;
     private bool is_update2;
 
+    private Auth_Controller ac;
+
     private void Start()
     {
+        ac = GetComponent<Auth_Controller>();
+
         update_time = 1.0f;
         update_time2 = 3.0f;
 
@@ -40,6 +52,16 @@ public class Player_Console : MonoBehaviourPunCallbacks
         Icon_Panel = GameObject.Find("Icon_Panel");
         Emotion_All = Icon_Panel.transform.GetChild(2).GetComponentsInChildren<Button>();
         All_Canvas = GameObject.FindGameObjectsWithTag("All_Canvas");
+
+        Scene scene = SceneManager.GetActiveScene();
+
+        if (scene.name == "Main_World") {
+            GameObject World_Info = GameObject.Find("World_Info");
+
+            for (int i = 0; i < World_Info.transform.childCount; i++) {
+                All_Info.Add(World_Info.transform.GetChild(i).gameObject);
+            }
+        }
 
         for (int i = 0; i < Emotion_All.Length; i++) {
             Button emotion = Emotion_All[i].GetComponent<Button>();
@@ -66,15 +88,17 @@ public class Player_Console : MonoBehaviourPunCallbacks
             } else {
                 is_update2 = true;
 
+                Reload_Info();
+
                 OnGetRoomsInfo(
                     (roomInfos) => {
                         all_room.Clear();
 
-                        print("¹æ °¹¼ö: " + roomInfos.Count.ToString());
+                        //print("¹æ °¹¼ö: " + roomInfos.Count.ToString());
 
                         for (int i = 0; i < roomInfos.Count; i++) {
                             all_room.Add(roomInfos[i].Name);
-                            print(roomInfos[i].Name);
+                            //print(roomInfos[i].Name);
                         }
 
                         update_realtime2 = 0.0f;
@@ -86,6 +110,21 @@ public class Player_Console : MonoBehaviourPunCallbacks
 
         if (client != null) {
             client.Service();
+        }
+    }
+
+    public void Reload_Info()
+    {
+        for (int i = 0; i < All_Info.Count; i++) {
+            Transform parent = All_Info[i].transform.GetChild(0);
+
+            username = parent.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            title = parent.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+            info = parent.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+
+            username.text = ac.rc_info.RC_Infos[i].username;
+            title.text = ac.rc_info.RC_Infos[i].title;
+            info.text = ac.rc_info.RC_Infos[i].info;
         }
     }
 

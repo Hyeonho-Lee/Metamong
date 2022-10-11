@@ -219,18 +219,30 @@ public class House_Manager : MonoBehaviour
         money -= 1000;
 
         ac.user.money = money;
+        ac.Update_User_Info();
+
         ac.house.is_house = true;
         ac.house.position_index = index_forcus;
         ac.house.house_date = DateTime.Now.ToString("yyyy-MM-dd");
-
-        ac.Update_User_Info();
         ac.Update_House();
+
+        ac.rc_info.RC_Infos[ac.house.position_index - 1].info = ac.house.position_index.ToString();
+        ac.rc_info.RC_Infos[ac.house.position_index - 1].title = ac.house.position_index.ToString() + "번 상담소 입니다";
+        ac.rc_info.RC_Infos[ac.house.position_index - 1].uid = ac.localId;
+        ac.rc_info.RC_Infos[ac.house.position_index - 1].username = ac.userName;
+        ac.Update_Room_Info();
 
         Change_Value();
     }
 
     public void Reset_House()
     {
+        ac.rc_info.RC_Infos[ac.house.position_index - 1].info = "";
+        ac.rc_info.RC_Infos[ac.house.position_index - 1].title = "";
+        ac.rc_info.RC_Infos[ac.house.position_index - 1].uid = "";
+        ac.rc_info.RC_Infos[ac.house.position_index - 1].username = "";
+        ac.Update_Room_Info();
+
         ac.house.uid = ac.user.uid;
         ac.house.username = ac.user.username;
         ac.house.is_house = false;

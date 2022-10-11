@@ -56,13 +56,13 @@ public class Photon_Player : MonoBehaviourPunCallbacks, IPunObservable
                 //camera.transform.parent = this.transform.parent;
             }
 
-            PhotonNetwork.LocalPlayer.NickName = CI.userName;
+            /*PhotonNetwork.LocalPlayer.NickName = CI.userName;
             PlayerNickName = CI.userName;
             //TMP.text = PV.IsMine ? PhotonNetwork.NickName : PV.Owner.NickName;
 
             if (PhotonNetwork.LocalPlayer.NickName == "") {
                 PhotonNetwork.LocalPlayer.NickName = CI.userName;
-            }
+            }*/
 
             StartCoroutine(N_All(1.0f));
         }
@@ -86,7 +86,15 @@ public class Photon_Player : MonoBehaviourPunCallbacks, IPunObservable
     {
         for (int i = 0; i < 3; i++) {
             yield return new WaitForSeconds(delay);
-            PV.RPC("SendName", RpcTarget.All);
+            if (AC.user.is_counselor && AC.user.is_counselor_check && !AC.user.is_admin) {
+                PV.RPC("NicknameRPC", RpcTarget.All, "<color=#FF9983>"+ AC.user.username + "</color>");
+            } else if (AC.user.is_user && !AC.user.is_admin && !AC.user.is_counselor) {
+                PV.RPC("NicknameRPC", RpcTarget.All, "<color=#FFFFFF>" + AC.user.username + "</color>");
+            } else if (AC.user.is_admin) {
+                PV.RPC("NicknameRPC", RpcTarget.All, "<color=#FF9983>" + AC.user.username + "</color>");
+            } else {
+                PV.RPC("NicknameRPC", RpcTarget.All, "<color=#FFFFFF>" + AC.user.username + "</color>");
+            }
         }
     }
 
@@ -260,9 +268,9 @@ public class Photon_Player : MonoBehaviourPunCallbacks, IPunObservable
 
     [PunRPC]
 
-    public void SendName()
+    public void NicknameRPC(string msg)
     {
-        TMP.text = CI.userName;
+        TMP.text = msg;
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

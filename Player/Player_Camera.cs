@@ -82,7 +82,7 @@ public class Player_Camera : MonoBehaviourPunCallbacks, IPunObservable
     {
         float whell = Input.GetAxisRaw("Mouse ScrollWheel");
         if (whell > 0) {
-            if (whell_value < 4.5)
+            if (whell_value < 8.5)
                 whell_value = whell_value + 0.5f;
         } else if (whell < 0) {
             if (whell_value > 1)
