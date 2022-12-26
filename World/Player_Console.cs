@@ -20,6 +20,7 @@ public class Player_Console : MonoBehaviourPunCallbacks
     private TextMeshProUGUI username;
     private TextMeshProUGUI title;
     private TextMeshProUGUI info;
+    private TextMeshProUGUI open_info;
 
     public Button[] Emotion_All;
     public GameObject Icon_Panel;
@@ -115,16 +116,45 @@ public class Player_Console : MonoBehaviourPunCallbacks
 
     public void Reload_Info()
     {
-        for (int i = 0; i < All_Info.Count; i++) {
-            Transform parent = All_Info[i].transform.GetChild(0);
+        Scene scene = SceneManager.GetActiveScene();
 
-            username = parent.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-            title = parent.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-            info = parent.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+        if (scene.name == "Main_World")
+        {
+            for (int i = 0; i < All_Info.Count; i++)
+            {
+                Transform parent = All_Info[i].transform.GetChild(0);
 
-            username.text = ac.rc_info.RC_Infos[i].username;
-            title.text = ac.rc_info.RC_Infos[i].title;
-            info.text = ac.rc_info.RC_Infos[i].info;
+                username = parent.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+                title = parent.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+                info = parent.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+                open_info = parent.transform.GetChild(6).GetComponent<TextMeshProUGUI>();
+
+                username.text = ac.rc_info.RC_Infos[i].time;
+                title.text = ac.rc_info.RC_Infos[i].title;
+                info.text = ac.rc_info.RC_Infos[i].info;
+
+                open_info.gameObject.SetActive(false);
+            }
+
+            for (int i = 0; i < all_room.Count; i++)
+            {
+                if (all_room[i] != "main_room")
+                {
+                    string index = all_room[i].Substring(0, all_room[i].Length - 4);
+
+                    for (int j = 0; j < All_Info.Count; j++)
+                    {
+                        Transform parent = All_Info[j].transform.GetChild(0);
+
+                        open_info = parent.transform.GetChild(6).GetComponent<TextMeshProUGUI>();
+
+                        if (j == (int.Parse(index) - 1))
+                        {
+                            open_info.gameObject.SetActive(true);
+                        }
+                    }
+                }
+            }
         }
     }
 

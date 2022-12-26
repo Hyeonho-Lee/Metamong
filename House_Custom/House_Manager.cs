@@ -69,6 +69,7 @@ public class House_Manager : MonoBehaviour
             Bntt.transform.SetParent(Parents);
             Bntt.transform.localScale = new Vector3(1, 1, 1);
             Bntt.GetComponent<Button>().onClick.AddListener(() => house_console.zoom_on());
+            Bntt.GetComponent<Button>().onClick.AddListener(() => house_console.Change_House(ac.house.house_index));
 
             GameObject item_name = Bntt.transform.Find("ItemName").gameObject;
             Text bntt_name = item_name.GetComponent<Text>();
@@ -228,6 +229,7 @@ public class House_Manager : MonoBehaviour
 
         ac.rc_info.RC_Infos[ac.house.position_index - 1].info = ac.house.position_index.ToString();
         ac.rc_info.RC_Infos[ac.house.position_index - 1].title = ac.house.position_index.ToString() + "번 상담소 입니다";
+        ac.rc_info.RC_Infos[ac.house.position_index - 1].time = "00:00 ~ 00:00";
         ac.rc_info.RC_Infos[ac.house.position_index - 1].uid = ac.localId;
         ac.rc_info.RC_Infos[ac.house.position_index - 1].username = ac.userName;
         ac.Update_Room_Info();
@@ -239,6 +241,7 @@ public class House_Manager : MonoBehaviour
     {
         ac.rc_info.RC_Infos[ac.house.position_index - 1].info = "";
         ac.rc_info.RC_Infos[ac.house.position_index - 1].title = "";
+        ac.rc_info.RC_Infos[ac.house.position_index - 1].time = "";
         ac.rc_info.RC_Infos[ac.house.position_index - 1].uid = "";
         ac.rc_info.RC_Infos[ac.house.position_index - 1].username = "";
         ac.Update_Room_Info();

@@ -56,14 +56,6 @@ public class Photon_Player : MonoBehaviourPunCallbacks, IPunObservable
                 //camera.transform.parent = this.transform.parent;
             }
 
-            /*PhotonNetwork.LocalPlayer.NickName = CI.userName;
-            PlayerNickName = CI.userName;
-            //TMP.text = PV.IsMine ? PhotonNetwork.NickName : PV.Owner.NickName;
-
-            if (PhotonNetwork.LocalPlayer.NickName == "") {
-                PhotonNetwork.LocalPlayer.NickName = CI.userName;
-            }*/
-
             StartCoroutine(N_All(1.0f));
         }
     }

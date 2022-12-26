@@ -15,6 +15,7 @@ public class StoreManager : MonoBehaviour
 
     public GameObject item_button;
     public GameObject buy_panel;
+
     public Text buy_text;
     public Text money_text;
 

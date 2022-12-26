@@ -34,11 +34,13 @@ public class Store_Console : MonoBehaviour
 
         sm.input_value = null;
 
-        FacePanel.SetActive(false);
+        FacePanel.SetActive(true);
         ClothesPanel.SetActive(false);
         AccessoryPanel.SetActive(false);
 
         sm.Delete_Button();
+
+        StartCoroutine(Input_Value());
     }
 
 
@@ -103,6 +105,8 @@ public class Store_Console : MonoBehaviour
         AccessoryPanel.SetActive(false);
 
         sm.Delete_Button();
+
+        Input_Value("传界");
     }
 
     public void Click_Clothes()
@@ -112,6 +116,8 @@ public class Store_Console : MonoBehaviour
         AccessoryPanel.SetActive(false);
 
         sm.Delete_Button();
+
+        Input_Value("惑狼");
     }
 
     public void Click_Accessory()
@@ -121,6 +127,8 @@ public class Store_Console : MonoBehaviour
         AccessoryPanel.SetActive(true);
 
         sm.Delete_Button();
+
+        Input_Value("厘侥1");
     }
     #endregion
 
@@ -130,6 +138,12 @@ public class Store_Console : MonoBehaviour
         sm.input_value = name;
         sm.Delete_Button();
         sm.Create_Btn();
+    }
+
+    IEnumerator Input_Value()
+    {
+        yield return new WaitForSeconds(1.0f);
+        Input_Value("传界");
     }
     #endregion
 

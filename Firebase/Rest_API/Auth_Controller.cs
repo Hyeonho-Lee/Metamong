@@ -61,7 +61,7 @@ public class Auth_Controller : MonoBehaviour
                 user.is_user = is_user;
                 user.is_counselor = is_counselor;
                 user.is_counselor_check = false;
-                user.money = 100;
+                user.money = 3000;
 
                 //Debug.Log("회원가입 성공");
                 PostToDatabase("user");

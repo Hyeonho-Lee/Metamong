@@ -229,7 +229,7 @@ public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
                     sit_panel2.SetActive(false);
                 }
 
-                if (distance <= 0.6f) {
+                if (distance <= 0.35f) {
                     if (Input.GetKeyDown(KeyCode.F)) {
                         if (!is_motion) {
                             StartCoroutine(Player_SitOn_Ani());
@@ -255,7 +255,7 @@ public class Player_Chat : MonoBehaviourPunCallbacks, IPunObservable
                     sit_panel.SetActive(false);
                 }
 
-                if (distance <= 0.6f) {
+                if (distance <= 0.35f) {
                     if (Input.GetKeyDown(KeyCode.F)) {
                         if (!is_motion) {
                             StartCoroutine(Player_SitOn_Ani());

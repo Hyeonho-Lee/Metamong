@@ -22,6 +22,7 @@ public class Setting_Field : MonoBehaviour
     [Header("Input_Field")]
     public InputField title;
     public InputField info;
+    public InputField time;
 
     [Header("Text")]
     public Text username;
@@ -85,6 +86,7 @@ public class Setting_Field : MonoBehaviour
             if (!is_esc) {
                 Setting_Canvas.SetActive(true);
                 is_esc = true;
+                esc_update();
             } else {
                 Setting_Canvas.SetActive(false);
                 is_esc = false;
@@ -107,6 +109,7 @@ public class Setting_Field : MonoBehaviour
 
                                 title.text = ac.rc_info.RC_Infos[int.Parse(cm2.room_index) - 1].title;
                                 info.text = ac.rc_info.RC_Infos[int.Parse(cm2.room_index) - 1].info;
+                                time.text = ac.rc_info.RC_Infos[int.Parse(cm2.room_index) - 1].time;
                             } else {
                                 RCInfo_Canvas.SetActive(false);
                                 is_b = false;
@@ -160,34 +163,38 @@ public class Setting_Field : MonoBehaviour
                     is_b = false;
                 }
             }
-
-            if (ac.user.uid != "") {
-                username.text = "<color=#FF9983>" + ac.user.username + "</color>";
-                uid.text = "<color=#FF9983>" + ac.user.uid + "</color>";
-
-                if (ac.user.is_counselor && ac.user.is_counselor_check && !ac.user.is_admin) {
-                    rating.text = "<color=#FF9983>" + "상담사" + "</color>";
-                } else if (ac.user.is_user && !ac.user.is_admin && !ac.user.is_counselor) {
-                    rating.text = "<color=#FF9983>" + "유저" + "</color>";
-                } else if (ac.user.is_admin) {
-                    rating.text = "<color=#FF9983>" + "어드민" + "</color>";
-                } else {
-                    rating.text = "<color=#FF9983>" + "인증중" + "</color>";
-                }
-            }
         }
     }
 
+    private void esc_update()
+    {
+        if (ac.user.uid != "") {
+            username.text = "<color=#FF9983>" + ac.user.username + "</color>";
+            uid.text = "<color=#FF9983>" + ac.user.uid + "</color>";
+
+            if (ac.user.is_counselor && ac.user.is_counselor_check && !ac.user.is_admin) {
+                rating.text = "<color=#FF9983>" + "상담사" + "</color>";
+            } else if (ac.user.is_user && !ac.user.is_admin && !ac.user.is_counselor) {
+                rating.text = "<color=#FF9983>" + "유저" + "</color>";
+            } else if (ac.user.is_admin) {
+                rating.text = "<color=#FF9983>" + "어드민" + "</color>";
+            } else {
+                rating.text = "<color=#FF9983>" + "인증중" + "</color>";
+            }
+        }
+    }
     public void is_esc_on()
     {
         Setting_Canvas.SetActive(true);
         is_esc = true;
+        esc_update();
     }
 
     public void is_esc_off()
     {
         Setting_Canvas.SetActive(false);
         is_esc = false;
+        esc_update();
     }
 
     public void update_info()
@@ -197,6 +204,7 @@ public class Setting_Field : MonoBehaviour
         if (scene.name == "Room_World") {
             ac.rc_info.RC_Infos[int.Parse(cm2.room_index) - 1].title = title.text;
             ac.rc_info.RC_Infos[int.Parse(cm2.room_index) - 1].info = info.text;
+            ac.rc_info.RC_Infos[int.Parse(cm2.room_index) - 1].time = time.text;
             ac.rc_info.RC_Infos[int.Parse(cm2.room_index) - 1].uid = ac.localId;
             ac.rc_info.RC_Infos[int.Parse(cm2.room_index) - 1].username = ac.userName;
 
@@ -220,5 +228,10 @@ public class Setting_Field : MonoBehaviour
     public void GameOver()
     {
         Application.Quit();
+    }
+
+    public void Title()
+    {
+        SceneManager.LoadScene("Title");
     }
 }
