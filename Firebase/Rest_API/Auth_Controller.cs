@@ -13,10 +13,10 @@ public class Auth_Controller : MonoBehaviour
 { 
     public static fsSerializer serializer = new fsSerializer();
 
-    private string database_url = "https://metamong-16b1b-default-rtdb.firebaseio.com";
-    private string signup_url = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=";
-    private string signin_url = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=";
-    private string auth_key = "AIzaSyD5rNq2oe20orEMCNwO06qePZn2BNYTyw8";
+    private string database_url = "";
+    private string signup_url = "";
+    private string signin_url = "";
+    private string auth_key = "";
 
     [Header("User Info")]
     public string userName;
@@ -42,7 +42,7 @@ public class Auth_Controller : MonoBehaviour
     public List<int> h_house_index = new List<int>();
     public List<bool> h_is_house = new List<bool>();
 
-    #region È¸¿ø°¡ÀÔ
+    #region íšŒì›ê°€ì…
 
     public void SignUp_User(string username, string email, string password, bool is_user, bool is_counselor)
     {
@@ -63,7 +63,7 @@ public class Auth_Controller : MonoBehaviour
                 user.is_counselor_check = false;
                 user.money = 3000;
 
-                //Debug.Log("È¸¿ø°¡ÀÔ ¼º°ø");
+                //Debug.Log("íšŒì›ê°€ì… ì„±ê³µ");
                 PostToDatabase("user");
 
                 error_code = "";
@@ -81,7 +81,7 @@ public class Auth_Controller : MonoBehaviour
 
     #endregion
 
-    #region ·Î±×ÀÎ
+    #region ë¡œê·¸ì¸
 
     public void SignIn_User(string email, string password)
     {
@@ -92,7 +92,7 @@ public class Auth_Controller : MonoBehaviour
                 idToken = response.idToken;
                 localId = response.localId;
 
-                //Debug.Log("·Î±×ÀÎ ¼º°ø");
+                //Debug.Log("ë¡œê·¸ì¸ ì„±ê³µ");
                 GetToDatabase("user");
 
                 error_code = "";
@@ -110,9 +110,9 @@ public class Auth_Controller : MonoBehaviour
 
     #endregion
 
-    #region Uid °¡Á®¿À±â
+    #region Uid ê°€ì ¸ì˜¤ê¸°
 
-    // ·Î±×ÀÎÀÌ ¿Ï·áÈÄ ¹ß±ŞµÈ TokenÀ» ÅëÇØ uid ¶Ç´Â ´Ù¸¥ µ¥ÀÌÅÍ Á¢±ÙÀÌ °¡´ÉÇÏ´Ù.
+    // ë¡œê·¸ì¸ì´ ì™„ë£Œí›„ ë°œê¸‰ëœ Tokenì„ í†µí•´ uid ë˜ëŠ” ë‹¤ë¥¸ ë°ì´í„° ì ‘ê·¼ì´ ê°€ëŠ¥í•˜ë‹¤.
     private void GetLocalId()
     {
         /*RestClient.Get(database_url + "/user/" + ".json?auth=" + idToken).Then(response =>
@@ -149,8 +149,8 @@ public class Auth_Controller : MonoBehaviour
 
     #endregion
 
-    #region ÆÄÀÌ¾îº£ÀÌ½º Á¢±Ù
-    // µ¥ÀÌÅÍ ¾÷·Îµå
+    #region íŒŒì´ì–´ë² ì´ìŠ¤ ì ‘ê·¼
+    // ë°ì´í„° ì—…ë¡œë“œ
     private void PostToDatabase(string value)
     {
         switch (value)
@@ -186,7 +186,7 @@ public class Auth_Controller : MonoBehaviour
         }
     }
 
-    // µ¥ÀÌÅÍ °¡Á®¿À±â
+    // ë°ì´í„° ê°€ì ¸ì˜¤ê¸°
     private void GetToDatabase(string value)
     {
         switch (value)
@@ -397,7 +397,7 @@ public class Auth_Controller : MonoBehaviour
     }
 
     #endregion
-    //------------------- À¯Àú ---------------------//
+    //------------------- ìœ ì € ---------------------//
 
     public void Update_User_Info()
     {
@@ -409,7 +409,7 @@ public class Auth_Controller : MonoBehaviour
         GetToDatabase("user_info");
     }
 
-    //----------------- Ä³¸¯ÅÍ -------------------//
+    //----------------- ìºë¦­í„° -------------------//
 
     public void Update_Character_Button()
     {
@@ -426,7 +426,7 @@ public class Auth_Controller : MonoBehaviour
         GetToDatabase("character_db");
     }
 
-    //------------------- »ó´ã¼Ò ²Ù¹Ì±â --------------------//
+    //------------------- ìƒë‹´ì†Œ ê¾¸ë¯¸ê¸° --------------------//
 
     public void Update_Room_Custom()
     {
@@ -443,7 +443,7 @@ public class Auth_Controller : MonoBehaviour
         GetToDatabase("room_db");
     }
 
-    //------------------- ºÎµ¿»ê -------------------//
+    //------------------- ë¶€ë™ì‚° -------------------//
 
     public void Update_House()
     {
@@ -460,7 +460,7 @@ public class Auth_Controller : MonoBehaviour
         GetToDatabase("all_house");
     }
 
-    //------------------- »ó´ã¼Ò ²Ù¹Ì±â --------------------//
+    //------------------- ìƒë‹´ì†Œ ê¾¸ë¯¸ê¸° --------------------//
 
     public void Update_Room_Info()
     {
